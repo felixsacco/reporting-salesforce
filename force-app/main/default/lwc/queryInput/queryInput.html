@@ -1,0 +1,62 @@
+<template>
+    <lightning-card title="Query Builder" icon-name="standard:search">
+        <div class="slds-p-around_medium">
+            <lightning-combobox
+                name="object"
+                label="Select Object"
+                value={selectedObject}
+                options={objectOptions}
+                onchange={handleObjectChange}
+                required>
+            </lightning-combobox>
+
+            <lightning-dual-listbox
+                name="fields"
+                label="Select Fields"
+                source-label="Available Fields"
+                selected-label="Selected Fields"
+                options={fieldOptions}
+                value={selectedFields}
+                onchange={handleFieldChange}
+                required
+                class="slds-m-top_small">
+            </lightning-dual-listbox>
+
+            <lightning-input
+                name="whereClause"
+                label="WHERE Clause (optional)"
+                value={whereClause}
+                onchange={handleWhereChange}
+                placeholder="e.g., ContentType = 'application/pdf'"
+                class="slds-m-top_small">
+            </lightning-input>
+
+            <lightning-input
+                type="number"
+                name="limit"
+                label="Limit"
+                value={limitValue}
+                onchange={handleLimitChange}
+                min="1"
+                max="2000"
+                class="slds-m-top_small"
+                required>
+            </lightning-input>
+
+            <div class="slds-m-top_medium">
+                <lightning-button
+                    variant="brand"
+                    label="Execute Query"
+                    onclick={handleQuery}
+                    disabled={isLoading}>
+                </lightning-button>
+            </div>
+
+            <template if:true={isLoading}>
+                <div class="slds-m-top_small">
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
