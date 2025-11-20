@@ -1,0 +1,33 @@
+<template>
+    <lightning-card title="Query Results" icon-name="standard:data_streams">
+        <div class="slds-p-around_medium">
+            <template if:true={hasResults}>
+                <div class="slds-m-bottom_small">
+                    <p class="slds-text-heading_small">
+                        <lightning-formatted-number value={recordCount}></lightning-formatted-number> 
+                        record(s) found
+                    </p>
+                </div>
+                <lightning-datatable
+                    key-field="Id"
+                    data={data}
+                    columns={columns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+
+            <template if:true={noResults}>
+                <div class="slds-text-align_center slds-p-around_large">
+                    <lightning-icon 
+                        icon-name="utility:search" 
+                        size="large" 
+                        alternative-text="No results">
+                    </lightning-icon>
+                    <p class="slds-m-top_small slds-text-color_weak">
+                        No results to display. Execute a query to see results here.
+                    </p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
