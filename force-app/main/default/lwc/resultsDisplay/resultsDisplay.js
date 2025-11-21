@@ -11,11 +11,23 @@ export default class ResultsDisplay extends LightningElement {
         
         // Build columns dynamically based on selected fields
         this.columns = fields.map(field => {
-            return {
+            const column = {
                 label: field,
                 fieldName: field,
                 type: this.getFieldType(field)
             };
+
+            // Make Id and Name fields clickable links
+            if (field === 'Id' || field === 'Name' || field === 'Title') {
+                column.type = 'url';
+                column.fieldName = field + 'Link';
+                column.typeAttributes = {
+                    label: { fieldName: field },
+                    target: '_blank'
+                };
+            }
+
+            return column;
         });
 
         // Process data for datatable
@@ -23,6 +35,11 @@ export default class ResultsDisplay extends LightningElement {
             const processedRecord = { Id: record.Id };
             fields.forEach(field => {
                 processedRecord[field] = record[field];
+
+                // Added link fields for Id, Name, and Title
+                if ((field === 'Id' || field === 'Name' || field === 'Title') && record[field]) {
+                    processedRecord[field + 'Link'] = `/${record.Id}`;
+                }
             });
             return processedRecord;
         });
