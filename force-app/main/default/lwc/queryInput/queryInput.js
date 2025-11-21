@@ -1,51 +1,42 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
 import queryAttachments from '@salesforce/apex/AttachmentQueryController.queryAttachments';
 import queryContentDocuments from '@salesforce/apex/AttachmentQueryController.queryContentDocuments';
+import getObjectFields from '@salesforce/apex/AttachmentQueryController.getObjectFields';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class QueryInput extends LightningElement {
     @track selectedObject = 'Attachment';
     @track selectedFields = [];
     @track whereClause = '';
-    @track limitValue = '';
+    @track limitValue = '10';
     @track isLoading = false;
+    @track fieldOptions = [];
 
     objectOptions = [
         { label: 'Attachment', value: 'Attachment' },
         { label: 'ContentDocument', value: 'ContentDocument' }
     ];
 
-    attachmentFieldOptions = [
-        { label: 'Id', value: 'Id' },
-        { label: 'Name', value: 'Name' },
-        { label: 'ContentType', value: 'ContentType' },
-        { label: 'BodyLength', value: 'BodyLength' },
-        { label: 'ParentId', value: 'ParentId' },
-        { label: 'CreatedDate', value: 'CreatedDate' },
-        { label: 'CreatedById', value: 'CreatedById' },
-        { label: 'LastModifiedDate', value: 'LastModifiedDate' }
-    ];
-
-    contentDocumentFieldOptions = [
-        { label: 'Id', value: 'Id' },
-        { label: 'Title', value: 'Title' },
-        { label: 'FileType', value: 'FileType' },
-        { label: 'ContentSize', value: 'ContentSize' },
-        { label: 'CreatedDate', value: 'CreatedDate' },
-        { label: 'CreatedById', value: 'CreatedById' },
-        { label: 'LastModifiedDate', value: 'LastModifiedDate' },
-        { label: 'OwnerId', value: 'OwnerId' }
-    ];
-
-    get fieldOptions() {
-        return this.selectedObject === 'Attachment' 
-            ? this.attachmentFieldOptions 
-            : this.contentDocumentFieldOptions;
+    connectedCallback() {
+        this.loadFields();
     }
 
-    handleObjectChange(event) {
+    async loadFields() {
+        try {
+            const fields = await getObjectFields({ objectName: this.selectedObject });
+            this.fieldOptions = fields.map(field => ({
+                label: field,
+                value: field
+            }));
+        } catch (error) {
+            this.showToast('Error', 'Error loading fields: ' + error.body?.message, 'error');
+        }
+    }
+
+    async handleObjectChange(event) {
         this.selectedObject = event.detail.value;
         this.selectedFields = []; // Reset fields when object changes
+        await this.loadFields(); // Reload fields for new object
     }
 
     handleFieldChange(event) {

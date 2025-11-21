@@ -19,7 +19,8 @@
                 value={selectedFields}
                 onchange={handleFieldChange}
                 required
-                class="slds-var-m-top_small">
+                class="slds-var-m-top_small"
+                disabled={isLoading}>
             </lightning-dual-listbox>
 
             <lightning-input
