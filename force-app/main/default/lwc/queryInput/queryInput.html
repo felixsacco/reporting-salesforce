@@ -1,6 +1,6 @@
 <template>
     <lightning-card title="Query Builder" icon-name="standard:search">
-        <div class="slds-p-around_medium">
+        <div class="slds-var-p-around_medium">
             <lightning-combobox
                 name="object"
                 label="Select Object"
@@ -19,7 +19,7 @@
                 value={selectedFields}
                 onchange={handleFieldChange}
                 required
-                class="slds-m-top_small">
+                class="slds-var-m-top_small">
             </lightning-dual-listbox>
 
             <lightning-input
@@ -28,7 +28,7 @@
                 value={whereClause}
                 onchange={handleWhereChange}
                 placeholder="e.g., ContentType = 'application/pdf'"
-                class="slds-m-top_small">
+                class="slds-var-m-top_small">
             </lightning-input>
 
             <lightning-input
@@ -39,11 +39,10 @@
                 onchange={handleLimitChange}
                 min="1"
                 max="2000"
-                class="slds-m-top_small"
-                required>
+                class="slds-var-m-top_small">
             </lightning-input>
 
-            <div class="slds-m-top_medium">
+            <div class="slds-var-m-top_medium">
                 <lightning-button
                     variant="brand"
                     label="Execute Query"
@@ -53,7 +52,7 @@
             </div>
 
             <template if:true={isLoading}>
-                <div class="slds-m-top_small">
+                <div class="slds-var-m-top_small">
                     <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
                 </div>
             </template>

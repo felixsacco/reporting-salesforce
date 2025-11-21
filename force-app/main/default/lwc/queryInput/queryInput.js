@@ -7,7 +7,7 @@ export default class QueryInput extends LightningElement {
     @track selectedObject = 'Attachment';
     @track selectedFields = [];
     @track whereClause = '';
-    @track limitValue = '10';
+    @track limitValue = '';
     @track isLoading = false;
 
     objectOptions = [
