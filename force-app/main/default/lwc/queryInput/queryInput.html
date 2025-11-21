@@ -23,15 +23,78 @@
                 disabled={isLoading}>
             </lightning-dual-listbox>
 
-            <lightning-input
-                name="whereClause"
-                label="WHERE Clause (optional)"
-                value={whereClause}
-                onchange={handleWhereChange}
-                placeholder="e.g., ContentType = 'application/pdf'"
-                class="slds-var-m-top_small">
-            </lightning-input>
 
+            <!-- WHERE Conditions Section -->
+            <div class="slds-m-top_medium">
+                <div class="slds-grid slds-grid_vertical-align-center">
+                    <div class="slds-col">
+                        <h3 class="slds-text-heading_small">WHERE Conditions</h3>
+                    </div>
+                    <div class="slds-col_bump-left">
+                        <lightning-button
+                            label="Add Condition"
+                            icon-name="utility:add"
+                            onclick={handleAddCondition}
+                            disabled={isLoading}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <template if:true={hasConditions}>
+                    <div class="slds-m-top_small">
+                        <template for:each={whereConditions} for:item="condition">
+                            <div key={condition.id} class="slds-grid slds-gutters slds-m-bottom_small slds-grid_vertical-align-end">
+                                <div class="slds-col slds-size_3-of-12">
+                                    <lightning-combobox
+                                        label="Field"
+                                        value={condition.field}
+                                        options={fieldOptions}
+                                        data-id={condition.id}
+                                        onchange={handleConditionFieldChange}
+                                        required>
+                                    </lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_3-of-12">
+                                    <lightning-combobox
+                                        label="Operator"
+                                        value={condition.operator}
+                                        options={operatorOptions}
+                                        data-id={condition.id}
+                                        onchange={handleConditionOperatorChange}
+                                        required>
+                                    </lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_5-of-12">
+                                    <lightning-input
+                                        label="Value"
+                                        value={condition.value}
+                                        data-id={condition.id}
+                                        onchange={handleConditionValueChange}
+                                        placeholder="Enter value"
+                                        required>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-12">
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        variant="border-filled"
+                                        alternative-text="Remove condition"
+                                        data-id={condition.id}
+                                        onclick={handleRemoveCondition}>
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <template if:false={hasConditions}>
+                    <div class="slds-m-top_small slds-text-color_weak">
+                        <p>No conditions added. Click "Add Condition" to filter results.</p>
+                    </div>
+                </template>
+            </div>
+            
             <lightning-input
                 type="number"
                 name="limit"
