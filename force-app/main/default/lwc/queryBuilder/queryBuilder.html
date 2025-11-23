@@ -1,6 +1,7 @@
 <template>
     <lightning-card title="Query Builder" icon-name="standard:search">
         <div class="slds-var-p-around_medium">
+            
             <lightning-combobox
                 name="object"
                 label="Select Object"
@@ -32,53 +33,60 @@
                         <lightning-button
                             label="Add Condition"
                             icon-name="utility:add"
-                            onclick={handleAddCondition}
+                            onclick={handleAddFilter}
                             disabled={isLoading}>
                         </lightning-button>
                     </div>
                 </div>
 
-                <template if:true={hasConditions}>
+                <template if:true={filters.length}>
                     <div class="slds-m-top_small">
-                        <template for:each={whereConditions} for:item="condition">
-                            <div key={condition.id} class="slds-grid slds-gutters slds-m-bottom_small slds-grid_vertical-align-end">
+                        <template for:each={filters} for:item="filter">
+                            <div key={filter.id} class="slds-grid slds-gutters slds-m-bottom_small slds-grid_vertical-align-end">
+                                
                                 <div class="slds-col slds-size_3-of-12">
                                     <lightning-combobox
                                         label="Field"
-                                        value={condition.field}
+                                        value={filter.fieldName}
                                         options={fieldOptions}
-                                        data-id={condition.id}
-                                        onchange={handleConditionFieldChange}
+                                        data-id={filter.id}
+                                        data-name="fieldName"
+                                        onchange={handleFilterChange}
                                         required>
                                     </lightning-combobox>
                                 </div>
+
                                 <div class="slds-col slds-size_3-of-12">
                                     <lightning-combobox
                                         label="Operator"
-                                        value={condition.operator}
+                                        value={filter.operator}
                                         options={operatorOptions}
-                                        data-id={condition.id}
-                                        onchange={handleConditionOperatorChange}
+                                        data-id={filter.id}
+                                        data-name="operator"
+                                        onchange={handleFilterChange}
                                         required>
                                     </lightning-combobox>
                                 </div>
+
                                 <div class="slds-col slds-size_5-of-12">
                                     <lightning-input
                                         label="Value"
-                                        value={condition.value}
-                                        data-id={condition.id}
-                                        onchange={handleConditionValueChange}
+                                        value={filter.value}
+                                        data-id={filter.id}
+                                        data-name="value"
+                                        onchange={handleFilterChange}
                                         placeholder="Enter value"
                                         required>
                                     </lightning-input>
                                 </div>
+
                                 <div class="slds-col slds-size_1-of-12">
                                     <lightning-button-icon
                                         icon-name="utility:delete"
                                         variant="border-filled"
                                         alternative-text="Remove condition"
-                                        data-id={condition.id}
-                                        onclick={handleRemoveCondition}>
+                                        data-id={filter.id}
+                                        onclick={handleRemoveFilter}>
                                     </lightning-button-icon>
                                 </div>
                             </div>
@@ -86,7 +94,7 @@
                     </div>
                 </template>
 
-                <template if:false={hasConditions}>
+                <template if:false={filters.length}>
                     <div class="slds-m-top_small slds-text-color_weak">
                         <p>No conditions added. Click "Add Condition" to filter results.</p>
                     </div>
@@ -108,11 +116,10 @@
                 <lightning-button
                     variant="brand"
                     label="Execute Query"
-                    onclick={handleQuery}
+                    onclick={handleRunQuery} 
                     disabled={isLoading}>
                 </lightning-button>
             </div>
-
             <template if:true={isLoading}>
                 <div class="slds-var-m-top_small">
                     <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>

@@ -55,6 +55,9 @@ export default class QueryBuilder extends LightningElement {
     }
 
     // --- User Actions ---
+    handleFieldChange(event) {
+        this.selectedFields = event.detail.value;
+    }
     
     handleAddFilter() {
         // Delegate logic to Utility
@@ -69,6 +72,15 @@ export default class QueryBuilder extends LightningElement {
         this.filters = this.filters.map(f => 
             f.id === parseInt(id, 10) ? { ...f, [name]: value } : f
         );
+    }
+
+    handleRemoveFilter(event) {
+        const id = parseInt(event.currentTarget.dataset.id, 10);
+        this.filters = this.filters.filter(f => f.id !== id);
+    }
+
+    handleLimitChange(event) {
+        this.limitValue = event.detail.value;
     }
 
     async handleRunQuery() {
@@ -90,10 +102,18 @@ export default class QueryBuilder extends LightningElement {
             });
             
             // 3. Dispatch Success
-            this.dispatchEvent(new CustomEvent('queryresults', { detail: results }));
+            this.dispatchEvent(new CustomEvent('queryresults', { 
+                detail: { 
+                    results: results,
+                    fields: this.selectedFields,
+                    objectType: this.selectedObject
+                } 
+            }));
+
+            this.showToast('Success', `Found ${results.length} records`, 'success');
 
         } catch (error) {
-            this.showToast('Error', error.body?.message, 'error');
+            this.showToast('Error', error.body?.message || error.message, 'error');
         } finally {
             this.isLoading = false;
         }
