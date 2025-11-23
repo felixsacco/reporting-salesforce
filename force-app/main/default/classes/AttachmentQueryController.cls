@@ -1,88 +1,33 @@
+// The container class for interacting with the Model and View Components
 public with sharing class AttachmentQueryController {
-    
+
     @AuraEnabled(cacheable=true)
     public static List<String> getObjectFields(String objectName) {
         try {
-            List<String> fieldNames = new List<String>();
-            
-            // Get the object describe
-            Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
-            if (objectType == null) {
-                throw new AuraHandledException('Invalid object name: ' + objectName);
-            }
-            
-            // Get all fields for the object
-            Map<String, Schema.SObjectField> fieldMap = objectType.getDescribe().fields.getMap();
-            
-            // Add accessible fields to the list
-            for (String fieldName : fieldMap.keySet()) {
-                Schema.DescribeFieldResult fieldDescribe = fieldMap.get(fieldName).getDescribe();
-                if (fieldDescribe.isAccessible()) {
-                    fieldNames.add(fieldDescribe.getName());
-                }
-            }
-            
-            // Sort alphabetically
-            fieldNames.sort();
-            
-            return fieldNames;
-            
+            // Delegates the work entirely to the Security Service
+            return SecurityService.getAccessibleFields(objectName); 
         } catch (Exception e) {
+            // Note: AuraHandledException is usually preferred for LWC/Aura errors
             throw new AuraHandledException('Error retrieving fields: ' + e.getMessage());
         }
     }
     
     @AuraEnabled
-    public static List<Attachment> queryAttachments(String fields, String whereClause, Integer limitValue) {
+    public static List<SObject> executeQuery(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitValue) {
         try {
-            // Validate inputs
-            if (String.isBlank(fields)) {
-                throw new AuraHandledException('Fields parameter is required');
-            }
+            // 1. Security Check
+            SecurityService.validateReadAccess(objectName, fields);
             
-            // Build the query
-            String query = 'SELECT ' + String.escapeSingleQuotes(fields) + ' FROM Attachment';
+            // 2. Build Query
+            String query = SoqlQueryBuilder.build(objectName, fields, filters, limitValue);
             
-            if (!String.isBlank(whereClause)) {
-                query += ' WHERE ' + whereClause;
-            }
-            
-            if (limitValue != null && limitValue > 0) {
-                query += ' LIMIT ' + limitValue;
-            }
-            
-            // Execute and return results
+            // 3. Execute (Data Access)
             return Database.query(query);
             
+        } catch (SecurityException se) {
+            throw new AuraHandledException('Security Error: ' + se.getMessage());
         } catch (Exception e) {
-            throw new AuraHandledException('Error querying Attachments: ' + e.getMessage());
-        }
-    }
-    
-    @AuraEnabled
-    public static List<ContentDocument> queryContentDocuments(String fields, String whereClause, Integer limitValue) {
-        try {
-            // Validate inputs
-            if (String.isBlank(fields)) {
-                throw new AuraHandledException('Fields parameter is required');
-            }
-            
-            // Build the query
-            String query = 'SELECT ' + String.escapeSingleQuotes(fields) + ' FROM ContentDocument';
-            
-            if (!String.isBlank(whereClause)) {
-                query += ' WHERE ' + whereClause;
-            }
-            
-            if (limitValue != null && limitValue > 0) {
-                query += ' LIMIT ' + limitValue;
-            }
-            
-            // Execute and return results
-            return Database.query(query);
-            
-        } catch (Exception e) {
-            throw new AuraHandledException('Error querying ContentDocuments: ' + e.getMessage());
+            throw new AuraHandledException('Unexpected Error: ' + e.getMessage());
         }
     }
 }
