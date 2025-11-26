@@ -1,6 +1,6 @@
 // Enables Data Access Security
 
-public inherited sharing class SecurityService {
+public inherited sharing class AccessChecker {
     
     /**
      * @description Validates that the current user has read access to the SObject and all specified fields.
