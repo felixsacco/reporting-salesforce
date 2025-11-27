@@ -24,7 +24,7 @@ The principal contribution of this study is the enhancement of accessibility to 
 <img src="assets/App Screenshot.png">
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 
 
@@ -76,7 +76,7 @@ After installing the application, you must assign the Permission Set to any user
 Demo of how to assign a permission set to a user can be found in the following video.<br>
 <a href="https://youtu.be/Z6XlW5OlVmc">How to Add a Permission Set to a Salesforce User</a>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 
 <!-- USAGE EXAMPLES -->
@@ -89,7 +89,7 @@ Demo of how to assign a permission set to a user can be found in the following v
 5. (Optional) Add Filters or Change Limit.
 6. Click Execute Query.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ## The Process and the Outcome (So Far..)
 
@@ -153,7 +153,7 @@ This application adheres to strict Salesforce security standards:
 - Enforces Object & Field Level Security: Users cannot see data they don't have access to.
 - SOQL Injection Protection: All user inputs are escaped and sanitized before query execution.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 <!-- 
 
@@ -169,7 +169,7 @@ This application adheres to strict Salesforce security standards:
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ## Contributing
 
@@ -184,7 +184,7 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 
 
@@ -195,5 +195,5 @@ Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.c
 
 Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
  -->
