@@ -9,7 +9,7 @@ private class AccessChecker_Tests {
         
         Test.startTest();
         try {
-            SecurityService.validateReadAccess(objectName, fields);
+            AccessChecker.validateReadAccess(objectName, fields);
         } catch (Exception e) {
             System.assert(false, 'Should not have thrown an exception for valid Account access');
         }
@@ -23,7 +23,7 @@ private class AccessChecker_Tests {
         
         Test.startTest();
         try {
-            SecurityService.validateReadAccess(invalidObj, fields);
+            AccessChecker.validateReadAccess(invalidObj, fields);
             System.assert(false, 'Should have thrown exception for invalid object');
         } catch (IllegalArgumentException e) {
             System.assert(e.getMessage().contains('Invalid Object'), 'Wrong error message');
@@ -41,7 +41,7 @@ private class AccessChecker_Tests {
         
         Test.startTest();
         try {
-            SecurityService.validateReadAccess(objectName, fields);
+            AccessChecker.validateReadAccess(objectName, fields);
             System.assert(false, 'Should have thrown exception for invalid field');
         } catch (SecurityException e) {
             System.assert(true, 'Caught expected SecurityException');
@@ -52,7 +52,7 @@ private class AccessChecker_Tests {
     @isTest
     static void testGetAccessibleFields() {
         Test.startTest();
-        List<String> fields = SecurityService.getAccessibleFields('Account');
+        List<String> fields = AccessChecker.getAccessibleFields('Account');
         Test.stopTest();
         
         System.assertNotEquals(null, fields, 'Result should not be null');
