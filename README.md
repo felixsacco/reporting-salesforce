@@ -43,7 +43,7 @@ Once you have an Org and the credentials, please go through the installation ste
 <h4>Option 1: Install via Package Link (Recommended for Admins)</h4>
 
 You can install this application directly into your Sandbox or Production environment using the Unlocked Package link.<br>
-<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tWU000000F72nYAC">Install Package</a>
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tWU000000F74PYAS">Install Package</a>
 
 1. Click the link above.
 2. Log in to your Salesforce Org.

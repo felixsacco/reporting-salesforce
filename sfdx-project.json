@@ -1,12 +1,21 @@
 {
   "packageDirectories": [
     {
+      "versionName": "V1.1",
+      "versionNumber": "1.1.0.NEXT",
       "path": "force-app",
-      "default": true
+      "default": true,
+      "package": "Report_On_Files",
+      "versionDescription": "Report Package Test"
     }
   ],
   "name": "ReportingOnAttachments",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "65.0"
+  "sourceApiVersion": "65.0",
+  "packageAliases": {
+    "Report_On_Files": "0HoWU0000000sTR0AY",
+    "Report_On_Files@0.1.0-1": "04tWU000000F72nYAC",
+    "Report_On_Files@1.1.0-1": "04tWU000000F74PYAS"
+  }
 }
