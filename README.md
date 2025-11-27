@@ -153,6 +153,7 @@ This application adheres to strict Salesforce security standards:
 - Enforces Object & Field Level Security: Users cannot see data they don't have access to.
 - SOQL Injection Protection: All user inputs are escaped and sanitized before query execution.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- 
 
