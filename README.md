@@ -6,11 +6,8 @@
     <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">license</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#the-process-and-the-outcome-so-far">The Process and the Outcome</a></li>
+    <li><a href="#roadmap">Roadmap (WIP)</a></li>
 </ul>
 
 <!-- ABOUT THE PROJECT -->
@@ -94,7 +91,7 @@ Demo of how to assign a permission set to a user can be found in the following v
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## The Process, and the Outcome (So Far..)
+## The Process and the Outcome (So Far..)
 
 ### Architecture
  
