@@ -24,7 +24,7 @@ The principal contribution of this study is the enhancement of accessibility to 
 
 <strong>TLDR</strong>: A robust, secure Lightning Web Component application that allows users to query, filter, and report on Attachment and ContentDocument (Files) records directly within Salesforce.
 
-![Reports on Files][product-screenshot]
+<img src="assets/App Screenshot.png">
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
