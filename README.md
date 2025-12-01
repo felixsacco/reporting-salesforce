@@ -150,7 +150,7 @@ ReportingOnAttachments/
 
 ### Security
 This application adheres to strict Salesforce security standards:
-- Enforces Object & Field Level Security: Users cannot see data they don't have access to.
+- Enforces Object & Field Level Security: Users cannot see data they don't have access to. (Not useful on Standard Attachment and ContentDocument entities, but it has been added for future feature additions)
 - SOQL Injection Protection: All user inputs are escaped and sanitized before query execution.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
