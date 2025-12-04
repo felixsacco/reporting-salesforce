@@ -155,8 +155,8 @@ This application adheres to strict Salesforce security standards:
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
-Future Roadmap in the works, the goal is to eventually make it look like a first-party app and add more functionality to the output table, obviously branched
-
+Future Roadmap in the works, the goal is to eventually make it look like a first-party app and add more functionality to the output table.
+The repository is frozen till submission evaluation is complete (max. 6 weeks)
 <!-- 
 ## Roadmap
 
