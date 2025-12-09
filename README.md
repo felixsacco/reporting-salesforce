@@ -9,7 +9,7 @@
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#the-process-and-the-outcome-so-far">The Process and the Outcome</a></li>
-    <li><a href="#roadmap">Roadmap (WIP)</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
 </ul>
 
 <!-- ABOUT THE PROJECT -->
