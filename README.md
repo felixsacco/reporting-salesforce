@@ -1,7 +1,9 @@
 <h1>Report app for Attachments and Files in Salesforce</h1>
 
 <!-- TABLE OF CONTENTS -->
+
 ## Table of Contents
+
 <ul>
     <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
@@ -11,6 +13,7 @@
 </ul>
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 Salesforce, as one of the leading cloud-based Customer Relationship Management (CRM) platforms, provides organizations with cloud instances of its applications for managing customer data, sales processes, and business operations. Despite its extensive data management and analytics capabilities, the built-in reporting feature does not have full support for the legacy Attachments entity, and these objects often have essential files for business compliance, especially those that still have their data in legacy components.
@@ -23,15 +26,14 @@ The principal contribution of this study is the enhancement of accessibility to 
 
 <img src="assets/App Screenshot.png">
 
-
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 ### Prerequisites
+
 Goes without saying, this requires a Salesforce instance to install and use. Anyone can get themselves a Salesforce Developer Edition Org provisioned by visiting <a href="https://www.salesforce.com/form/developer-signup/?d=pb">developer.salesforce.com</a> and signing up for one.
 Once you have an Org and the credentials, please go through the installation steps below.
 
@@ -51,18 +53,18 @@ You can install this application directly into your Sandbox or Production enviro
 If you have the Salesforce CLI installed, you can deploy the source code directly.
 
 1. Clone this repository:
-    ```sh
-    git clone https://github.com/MriteshAdak/Reporting-on-Attachments-Salesforce
-    cd Reporting-on-Attachments-Salesforce
-    ```
+   ```sh
+   git clone https://github.com/MriteshAdak/Reporting-on-Attachments-Salesforce
+   cd Reporting-on-Attachments-Salesforce
+   ```
 2. Authorize your target org:
-    ```sh
-    sf org login web --alias target-org
-    ```
+   ```sh
+   sf org login web --alias target-org
+   ```
 3. Deploy the source:
-    ```sh
-    sf project deploy start --target-org target-org
-    ```
+   ```sh
+   sf project deploy start --target-org target-org
+   ```
 
 ### Post-Installation Setup
 
@@ -78,12 +80,12 @@ A demo of how to assign a permission set to a user can be found in the following
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
-
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 1. Navigate to the App Launcher.
-2. Search for "Reports on Files." 
+2. Search for "Reports on Files."
 3. Select the Object (Attachment or Content Document).
 4. Select the Fields you wish to see.
 5. (Optional) Add Filters or Change Limit.
@@ -94,8 +96,9 @@ A demo of how to assign a permission set to a user can be found in the following
 ## The Process and the Outcome (So Far..)
 
 ### Architecture
- 
+
 This project follows an Enterprise Layered Architecture of SF (Model-View-Controller):
+
 - LWC: Handles UI and Event Delegation (queryBuilder, resultsDisplay).
 - Apex Controller: Entry point for the Business Logic (AttachmentQueryController).
 - Service Layer: Handles Security logic (AccessChecker).
@@ -111,13 +114,13 @@ ReportingOnAttachments/
         └── default/
             │
             ├── classes/  <-- BACKEND (APEX)
-            │   │   
+            │   │
             │   ├── AttachmentQueryController.cls   # The Coordinator/Broker
             │   ├── AttachmentQueryController.cls-meta.xml
-            │   │   
+            │   │
             │   ├── AccessChecker.cls               # The Security Guard
             │   ├── AccessChecker.cls-meta.xml
-            │   │   
+            │   │
             │   ├── SoqlQueryBuilder.cls            # The Query String Builder
             │   ├── SoqlQueryBuilder.cls-meta.xml
             │   │
@@ -129,72 +132,48 @@ ReportingOnAttachments/
             └── lwc/  <-- FRONTEND (Javascript/HTML)
                 │
                 └── queryBuilder/       # User-Input Component
-                │   ├── __tests__             
-                │   ├── queryBuilder.html     
-                │   ├── queryBuilder.js       
+                │   ├── __tests__
+                │   ├── queryBuilder.html
+                │   ├── queryBuilder.js
                 │   └── queryBuilder.js-meta.xml
                 │
                 └── resultsDisplay/     # Output Component
-                │   ├── __tests__             
-                │   ├── resultsDisplay.html   
-                │   ├── resultsDisplay.js     
+                │   ├── __tests__
+                │   ├── resultsDisplay.html
+                │   ├── resultsDisplay.js
                 │   └── resultsDisplay.js-meta.xml
                 │
                 └── reportsOnFiles/     # Container Component
-                    ├── __tests__             
-                    ├── queryBuilder.html     
-                    ├── reportsOnFiles.js     
+                    ├── __tests__
+                    ├── queryBuilder.html
+                    ├── reportsOnFiles.js
                     └── reportsOnFiles.js-meta.xml
 
 ```
 
 ### Security
+
 This application adheres to strict Salesforce security standards:
+
 - Enforces Object & Field Level Security: Users cannot see data they don't have access to. (Not useful on Standard Attachment and ContentDocument entities, but it has been added for future feature additions)
 - SOQL Injection Protection: All user inputs are escaped and sanitized before query execution.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
-Future Roadmap in the works, the goal is to eventually make it look like a first-party app and add more functionality to the output table.
-The repository is frozen till submission evaluation is complete (max. 6 weeks)
-<!-- 
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+- [ ] Have the list of fields display label names instead of API names
+- [ ] Add an opiton to have parent object dropdown/picklist alongside the file entity
+- [ ] Refine the filter condition UI element
+  - [ ] Make the value field reactive to the data type of the field selected
+  - [ ] Improve checks that validates the value field
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
-
-
-
-
+<!--
+See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues)
 ## Contact
-
 Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
 Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
-
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
- -->
+-->
