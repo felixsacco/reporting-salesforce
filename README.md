@@ -1,5 +1,7 @@
 <h1>Report app for Attachments and Files in Salesforce</h1>
 
+<h1> A new project is in the works (from scratch) that achieves the same feature but better so no further improvements would be done to this project </h1>
+
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
