@@ -2,6 +2,8 @@
 
 <h2> (Deprecated) A new project is in the works (from scratch) that achieves the same feature but with native low-code artifacts making it more maintainable so no further improvements would be done to this project </h2>
 
+<a href="https://github.com/MriteshAdak/Unified-Reporting-on-all-File-Types-Salesforce-">Link to the Repository</a>
+
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
