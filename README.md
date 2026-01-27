@@ -1,7 +1,5 @@
 <h1>Report app for Attachments and Files in Salesforce</h1>
 
-<a href="https://github.com/MriteshAdak/Unified-Reporting-on-all-File-Types-Salesforce-">Link to the Repository</a>
-
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
