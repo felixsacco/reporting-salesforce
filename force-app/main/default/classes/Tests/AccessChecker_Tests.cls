@@ -1,3 +1,11 @@
+/**
+ * @description Enhanced test class for AccessChecker.
+ *              Tests security validation, field options, and operator whitelist.
+ * 
+ * @author Agent Mritesh
+ * @date 2026-02-17
+ * @version 1.2.0
+ */
 @isTest
 private class AccessChecker_Tests {
     
@@ -10,8 +18,9 @@ private class AccessChecker_Tests {
         Test.startTest();
         try {
             AccessChecker.validateReadAccess(objectName, fields);
+            System.assert(true, 'Should not throw exception for valid Account access');
         } catch (Exception e) {
-            System.assert(false, 'Should not have thrown an exception for valid Account access');
+            System.assert(false, 'Should not have thrown an exception for valid Account access: ' + e.getMessage());
         }
         Test.stopTest();
     }
@@ -26,9 +35,9 @@ private class AccessChecker_Tests {
             AccessChecker.validateReadAccess(invalidObj, fields);
             System.assert(false, 'Should have thrown exception for invalid object');
         } catch (IllegalArgumentException e) {
-            System.assert(e.getMessage().contains('Invalid Object'), 'Wrong error message');
+            System.assert(e.getMessage().contains('Invalid Object'), 'Should indicate invalid object');
         } catch (Exception e) {
-             // Catch generic if specific type isn't thrown
+            System.assert(false, 'Wrong exception type thrown: ' + e.getMessage());
         }
         Test.stopTest();
     }
@@ -36,7 +45,6 @@ private class AccessChecker_Tests {
     @isTest
     static void testValidateReadAccess_InvalidField() {
         String objectName = 'Account';
-        // 'InvalidField__c' likely doesn't exist
         List<String> fields = new List<String>{'InvalidField__c'};
         
         Test.startTest();
@@ -44,7 +52,9 @@ private class AccessChecker_Tests {
             AccessChecker.validateReadAccess(objectName, fields);
             System.assert(false, 'Should have thrown exception for invalid field');
         } catch (SecurityException e) {
-            System.assert(true, 'Caught expected SecurityException');
+            System.assert(e.getMessage().contains('Access denied'), 'Should indicate access denied');
+        } catch (Exception e) {
+            System.assert(false, 'Wrong exception type: ' + e.getMessage());
         }
         Test.stopTest();
     }
@@ -58,5 +68,154 @@ private class AccessChecker_Tests {
         System.assertNotEquals(null, fields, 'Result should not be null');
         System.assert(fields.size() > 0, 'Should return fields for Account');
         System.assert(fields.contains('Name'), 'Should contain standard field Name');
+        System.assert(fields.contains('Id'), 'Should contain standard field Id');
+    }
+    
+    @isTest
+    static void testGetAccessibleFields_InvalidObject() {
+        Test.startTest();
+        List<String> fields = AccessChecker.getAccessibleFields('InvalidObject__c');
+        Test.stopTest();
+        
+        System.assertEquals(0, fields.size(), 'Should return empty list for invalid object');
+    }
+    
+    @isTest
+    static void testGetAccessibleFields_BlankObjectName() {
+        Test.startTest();
+        List<String> fields = AccessChecker.getAccessibleFields('');
+        Test.stopTest();
+        
+        System.assertEquals(0, fields.size(), 'Should return empty list for blank object name');
+    }
+    
+    @isTest
+    static void testGetAccessibleFields_NullObjectName() {
+        Test.startTest();
+        List<String> fields = AccessChecker.getAccessibleFields(null);
+        Test.stopTest();
+        
+        System.assertEquals(0, fields.size(), 'Should return empty list for null object name');
+    }
+    
+    @isTest
+    static void testGetAccessibleFieldOptions_Account() {
+        // Test that field options include both label and value
+        Test.startTest();
+        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('Account');
+        Test.stopTest();
+        
+        System.assertNotEquals(null, options, 'Should return options');
+        System.assert(options.size() > 0, 'Should have at least one field');
+        
+        // Find the Name field
+        SchemaFieldOption nameField = null;
+        for (SchemaFieldOption opt : options) {
+            if (opt.value == 'Name') {
+                nameField = opt;
+                break;
+            }
+        }
+        
+        System.assertNotEquals(null, nameField, 'Should include Name field');
+        System.assertEquals('Name', nameField.value, 'Value should be API name');
+        System.assertNotEquals(null, nameField.label, 'Label should not be null');
+        System.assert(nameField.label.length() > 0, 'Label should not be empty');
+    }
+
+    @isTest
+    static void testGetAccessibleFieldOptions_InvalidObject() {
+        // Test with non-existent object
+        Test.startTest();
+        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('InvalidObject__c');
+        Test.stopTest();
+        
+        System.assertEquals(0, options.size(), 'Should return empty list for invalid object');
+    }
+
+    @isTest
+    static void testGetAccessibleFieldOptions_EmptyObjectName() {
+        // Test with blank object name
+        Test.startTest();
+        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('');
+        Test.stopTest();
+        
+        System.assertEquals(0, options.size(), 'Should return empty list for blank object');
+    }
+
+    @isTest
+    static void testGetAccessibleFieldOptions_NullObjectName() {
+        // Test with null object name
+        Test.startTest();
+        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions(null);
+        Test.stopTest();
+        
+        System.assertEquals(0, options.size(), 'Should return empty list for null object');
+    }
+
+    @isTest
+    static void testGetAccessibleFieldOptions_Sorted() {
+        // Test that results are sorted by label
+        Test.startTest();
+        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('Account');
+        Test.stopTest();
+        
+        // Verify sorting (compare adjacent elements)
+        for (Integer i = 0; i < options.size() - 1; i++) {
+            String currentLabel = options[i].label != null ? options[i].label.toLowerCase() : '';
+            String nextLabel = options[i + 1].label != null ? options[i + 1].label.toLowerCase() : '';
+            System.assert(currentLabel <= nextLabel, 
+                'Options should be sorted by label: "' + currentLabel + '" should come before or equal "' + nextLabel + '"');
+        }
+    }
+
+    @isTest
+    static void testGetAllowedOperators() {
+        // Test operator whitelist
+        Test.startTest();
+        Set<String> operators = AccessChecker.getAllowedOperators();
+        Test.stopTest();
+        
+        // Verify expected operators are present
+        System.assert(operators.contains('='), 'Should contain =');
+        System.assert(operators.contains('!='), 'Should contain !=');
+        System.assert(operators.contains('<'), 'Should contain <');
+        System.assert(operators.contains('>'), 'Should contain >');
+        System.assert(operators.contains('<='), 'Should contain <=');
+        System.assert(operators.contains('>='), 'Should contain >=');
+        System.assert(operators.contains('LIKE'), 'Should contain LIKE');
+        System.assert(operators.contains('IN'), 'Should contain IN');
+        System.assert(operators.contains('NOT IN'), 'Should contain NOT IN');
+        System.assert(operators.contains('INCLUDES'), 'Should contain INCLUDES');
+        System.assert(operators.contains('EXCLUDES'), 'Should contain EXCLUDES');
+        
+        // Verify dangerous operators NOT present
+        System.assert(!operators.contains('OR'), 'Should not contain OR');
+        System.assert(!operators.contains('AND'), 'Should not contain AND');
+        System.assert(!operators.contains('SELECT'), 'Should not contain SELECT');
+        System.assert(!operators.contains('DELETE'), 'Should not contain DELETE');
+        System.assert(!operators.contains('UPDATE'), 'Should not contain UPDATE');
+        System.assert(!operators.contains('INSERT'), 'Should not contain INSERT');
+    }
+    
+    @isTest
+    static void testGetAccessibleFieldOptions_Attachment() {
+        // Test with Attachment object specifically
+        Test.startTest();
+        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('Attachment');
+        Test.stopTest();
+        
+        System.assertNotEquals(null, options, 'Should return options for Attachment');
+        System.assert(options.size() > 0, 'Attachment should have accessible fields');
+        
+        // Verify at least one field has both label and value
+        Boolean foundValidOption = false;
+        for (SchemaFieldOption opt : options) {
+            if (String.isNotBlank(opt.label) && String.isNotBlank(opt.value)) {
+                foundValidOption = true;
+                break;
+            }
+        }
+        System.assert(foundValidOption, 'At least one option should have valid label and value');
     }
 }
