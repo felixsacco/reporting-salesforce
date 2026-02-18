@@ -1,3 +1,11 @@
+/**
+ * @description Results display component for query results.
+ *              Enhanced to display field labels in column headers instead of API names.
+ * 
+ * @author Agent Mritesh
+ * @date 2026-02-17
+ * @version 1.2.0
+ */
 import { LightningElement, api } from "lwc";
 
 export default class ResultsDisplay extends LightningElement {
@@ -5,15 +13,21 @@ export default class ResultsDisplay extends LightningElement {
   data = [];
   recordCount = 0;
 
+  /**
+   * @description Updates the results display with new data and field labels.
+   * @param {Array} results - Array of SObject records
+   * @param {Array} fields - Array of field API names
+   * @param {String} objectType - The object type being queried
+   * @param {Object} fieldLabels - Map of API names to labels {apiName: label}
+   */
   @api
-  // eslint-disable-next-line no-unused-vars
-  updateResults(results, fields, objectType) {
+  updateResults(results, fields, objectType, fieldLabels) {
     this.recordCount = results.length;
 
     // Build columns dynamically based on selected fields
     this.columns = fields.map((field) => {
       const column = {
-        label: field,
+        label: fieldLabels[field], // Use label from map
         fieldName: field,
         type: this.getFieldType(field)
       };
@@ -37,7 +51,7 @@ export default class ResultsDisplay extends LightningElement {
       fields.forEach((field) => {
         processedRecord[field] = record[field];
 
-        // Added link fields for Id, Name, and Title
+        // Add link fields for Id, Name, and Title
         if (
           (field === "Id" || field === "Name" || field === "Title") &&
           record[field]
@@ -49,10 +63,15 @@ export default class ResultsDisplay extends LightningElement {
     });
   }
 
+  /**
+   * @description Determines the data type for a field to enable proper formatting in datatable.
+   * @param {String} fieldName - The API name of the field
+   * @returns {String} The field type (date, number, or text)
+   */
   getFieldType(fieldName) {
     // Define field types for proper formatting
-    const dateFields = ["CreatedDate", "LastModifiedDate"];
-    const numberFields = ["BodyLength", "ContentSize"];
+    const dateFields = ["CreatedDate", "LastModifiedDate", "SystemModstamp"];
+    const numberFields = ["BodyLength", "ContentSize", "NumberOfEmployees"];
 
     if (dateFields.includes(fieldName)) {
       return "date";
