@@ -75,16 +75,46 @@
                 </div>
 
                 <div class="slds-col slds-size_5-of-12">
-                  <lightning-input
-                    label="Value"
-                    value={filter.value}
-                    data-id={filter.id}
-                    data-name="value"
-                    onchange={handleFilterChange}
-                    placeholder="Enter value"
-                    required
-                  >
-                  </lightning-input>
+                  <!-- Single Value Input (default) -->
+                  <template if:false={filter.requiresMultiValue}>
+                    <lightning-input
+                      label="Value"
+                      value={filter.value}
+                      data-id={filter.id}
+                      data-name="value"
+                      onchange={handleFilterChange}
+                      placeholder="Enter value"
+                      required
+                    >
+                    </lightning-input>
+                  </template>
+                  
+                  <!-- Multi-Value Input (for IN, NOT IN, INCLUDES, EXCLUDES) -->
+                  <template if:true={filter.requiresMultiValue}>
+                    <div class="slds-form-element">
+                      <label class="slds-form-element__label">Values</label>
+                      <div class="slds-form-element__control">
+                        <template if:true={filter.valueItems.length}>
+                          <lightning-pill-container
+                            items={filter.valueItems}
+                            data-id={filter.id}
+                            onitemremove={handlePillRemove}
+                          >
+                          </lightning-pill-container>
+                        </template>
+                        <lightning-input
+                          placeholder="Type value and press Enter"
+                          value={filter.currentInputValue}
+                          data-id={filter.id}
+                          data-name="currentInputValue"
+                          onchange={handleMultiValueInput}
+                          onkeyup={handleMultiValueKeyup}
+                          class="slds-m-top_x-small"
+                        >
+                        </lightning-input>
+                      </div>
+                    </div>
+                  </template>
                 </div>
 
                 <div class="slds-col slds-size_1-of-12">
