@@ -169,11 +169,3 @@ This application adheres to strict Salesforce security standards:
   - [ ] Improve checks that validates the value field
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
-
-<!--
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues)
-## Contact
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
--->
