@@ -42,6 +42,7 @@ public with sharing class SecurityService {
     }
 
     /**
+     * DEPRECATED: Use getAccessibleFieldOptions instead for richer metadata.
      * @description Retrieves a sorted list of field API names for a given SObject 
      *              that the current user has access to view.
      * @param objectName The API name of the SObject.
@@ -52,16 +53,15 @@ public with sharing class SecurityService {
         if (String.isBlank(objectName)) {
             return new List<String>();
         }
-
+        
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         if (objectType == null || !objectType.getDescribe().isAccessible()) {
-            return new List<String>(); // No access, return empty list
+            return new List<String>();
         }
 
         List<String> accessibleFields = new List<String>();
         Map<String, Schema.SObjectField> fieldMap = objectType.getDescribe().fields.getMap();
 
-        // Iterate through all fields and check FLS
         for (Schema.SObjectField field : fieldMap.values()) {
             Schema.DescribeFieldResult describe = field.getDescribe();
             if (describe.isAccessible()) {
@@ -87,26 +87,25 @@ public with sharing class SecurityService {
 
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         if (objectType == null || !objectType.getDescribe().isAccessible()) {
-            return new List<SchemaFieldOption>(); // No access, return empty list
+            return new List<SchemaFieldOption>();
         }
 
         List<SchemaFieldOption> fieldOptions = new List<SchemaFieldOption>();
         Map<String, Schema.SObjectField> fieldMap = objectType.getDescribe().fields.getMap();
 
-        // Iterate through all fields and check FLS
         for (Schema.SObjectField field : fieldMap.values()) {
             Schema.DescribeFieldResult describe = field.getDescribe();
             if (describe.isAccessible()) {
                 // Create DTO with label (for display) and API name (for queries)
                 SchemaFieldOption option = new SchemaFieldOption(
-                    describe.getLabel(),  // User-friendly label
-                    describe.getName()    // API name
+                    describe.getLabel(),  
+                    describe.getName()    
                 );
                 fieldOptions.add(option);
             }
         }
         
-        // Sort by label for better UX (manual sorting since we can't use Collections.sort on custom objects directly)
+        // Sorting by label for better user experience in dropdowns
         for (Integer i = 0; i < fieldOptions.size() - 1; i++) {
             for (Integer j = i + 1; j < fieldOptions.size(); j++) {
                 String labelI = fieldOptions[i].label != null ? fieldOptions[i].label.toLowerCase() : '';
