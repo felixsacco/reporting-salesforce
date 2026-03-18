@@ -27,7 +27,7 @@ private class SecurityService_Tests {
 
     @isTest
     static void testValidateReadAccess_InvalidObject() {
-        String invalidObj = 'NonExistentObject__c';
+        String invalidObj = 'ReallyNonExistentObject__c';
         List<String> fields = new List<String>{'Name'};
         
         Test.startTest();

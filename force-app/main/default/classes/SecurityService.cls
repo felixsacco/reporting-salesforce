@@ -17,6 +17,10 @@ public with sharing class SecurityService {
      * @throws SecurityException if the user lacks access to the object or any field
      */
     public static void validateReadAccess(String objectName, List<String> fields) {
+        if(String.isBlank(objectName) || fields == null || fields.isEmpty()) {
+            throw new IllegalArgumentException('Invalid input: Object name and fields must be provided');
+        }
+        
         // Validate Object Access
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         if (objectType == null) {
