@@ -49,6 +49,32 @@ private class SoqlQueryBuilder_Tests {
         System.assert(query.contains('Name ='), 'Should contain filter condition');
     }
 
+    @isTest
+    static void testAllowedOperators_Constant() {
+        Set<String> operators = SoqlQueryBuilder.ALLOWED_OPERATORS;
+
+        // Verify expected operators are present
+        System.assert(operators.contains('='), 'Should contain =');
+        System.assert(operators.contains('!='), 'Should contain !=');
+        System.assert(operators.contains('<'), 'Should contain <');
+        System.assert(operators.contains('>'), 'Should contain >');
+        System.assert(operators.contains('<='), 'Should contain <=');
+        System.assert(operators.contains('>='), 'Should contain >=');
+        System.assert(operators.contains('LIKE'), 'Should contain LIKE');
+        System.assert(operators.contains('IN'), 'Should contain IN');
+        System.assert(operators.contains('NOT IN'), 'Should contain NOT IN');
+        System.assert(operators.contains('INCLUDES'), 'Should contain INCLUDES');
+        System.assert(operators.contains('EXCLUDES'), 'Should contain EXCLUDES');
+
+        // Verify dangerous operators are not present
+        System.assert(!operators.contains('OR'), 'Should not contain OR');
+        System.assert(!operators.contains('AND'), 'Should not contain AND');
+        System.assert(!operators.contains('SELECT'), 'Should not contain SELECT');
+        System.assert(!operators.contains('DELETE'), 'Should not contain DELETE');
+        System.assert(!operators.contains('UPDATE'), 'Should not contain UPDATE');
+        System.assert(!operators.contains('INSERT'), 'Should not contain INSERT');
+    }
+
     // ========== NUMERIC FIELD TESTS ==========
     
     @isTest

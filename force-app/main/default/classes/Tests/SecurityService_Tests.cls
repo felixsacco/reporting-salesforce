@@ -170,35 +170,6 @@ private class SecurityService_Tests {
     }
 
     @isTest
-    static void testGetAllowedOperators() {
-        // Test operator whitelist
-        Test.startTest();
-        Set<String> operators = SecurityService.getAllowedOperators();
-        Test.stopTest();
-        
-        // Verify expected operators are present
-        System.assert(operators.contains('='), 'Should contain =');
-        System.assert(operators.contains('!='), 'Should contain !=');
-        System.assert(operators.contains('<'), 'Should contain <');
-        System.assert(operators.contains('>'), 'Should contain >');
-        System.assert(operators.contains('<='), 'Should contain <=');
-        System.assert(operators.contains('>='), 'Should contain >=');
-        System.assert(operators.contains('LIKE'), 'Should contain LIKE');
-        System.assert(operators.contains('IN'), 'Should contain IN');
-        System.assert(operators.contains('NOT IN'), 'Should contain NOT IN');
-        System.assert(operators.contains('INCLUDES'), 'Should contain INCLUDES');
-        System.assert(operators.contains('EXCLUDES'), 'Should contain EXCLUDES');
-        
-        // Verify dangerous operators NOT present
-        System.assert(!operators.contains('OR'), 'Should not contain OR');
-        System.assert(!operators.contains('AND'), 'Should not contain AND');
-        System.assert(!operators.contains('SELECT'), 'Should not contain SELECT');
-        System.assert(!operators.contains('DELETE'), 'Should not contain DELETE');
-        System.assert(!operators.contains('UPDATE'), 'Should not contain UPDATE');
-        System.assert(!operators.contains('INSERT'), 'Should not contain INSERT');
-    }
-    
-    @isTest
     static void testGetAccessibleFieldOptions_Attachment() {
         // Test with Attachment object specifically
         Test.startTest();

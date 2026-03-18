@@ -13,6 +13,14 @@ public with sharing class SoqlQueryBuilder {
     private static final Integer MIN_LIMIT = 1;
     private static final Integer MAX_LIMIT = 2000;
     private static final Integer DEFAULT_LIMIT = 50;
+
+    // Whitelist of supported SOQL operators used for server-side validation.
+    public static final Set<String> ALLOWED_OPERATORS = new Set<String>{
+        '=', '!=', '<', '>', '<=', '>=',
+        'LIKE',
+        'IN', 'NOT IN',
+        'INCLUDES', 'EXCLUDES'
+    };
     
     /**
      * @description Builds a SOQL query with type-aware value formatting (new enhanced version).
@@ -102,9 +110,8 @@ public with sharing class SoqlQueryBuilder {
      */
     private static String validateOperator(String operator) {
         String normalized = operator.toUpperCase().trim();
-        Set<String> allowedOperators = SecurityService.getAllowedOperators();
-        
-        if (!allowedOperators.contains(normalized)) {
+
+        if (!ALLOWED_OPERATORS.contains(normalized)) {
             throw new IllegalArgumentException('Unsupported operator: ' + operator);
         }
         

@@ -65,7 +65,7 @@ public with sharing class AttachmentQueryController {
             
             // 2. Validate operators against whitelist
             if (filters != null) {
-                Set<String> allowedOps = SecurityService.getAllowedOperators();
+                Set<String> allowedOps = SoqlQueryBuilder.ALLOWED_OPERATORS;
                 for (QueryFilterDto filter : filters) {
                     String op = filter.operator.toUpperCase().trim();
                     if (!allowedOps.contains(op)) {

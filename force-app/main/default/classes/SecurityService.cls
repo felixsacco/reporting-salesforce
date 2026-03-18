@@ -121,17 +121,4 @@ public with sharing class SecurityService {
         return fieldOptions;
     }
 
-    /**
-     * @description Returns the server-side whitelist of supported SOQL operators.
-     *              This prevents injection of unsupported or dangerous operators.
-     * @return A Set of allowed operator strings in uppercase
-     */
-    public static Set<String> getAllowedOperators() {
-        return new Set<String>{
-            '=', '!=', '<', '>', '<=', '>=',
-            'LIKE',
-            'IN', 'NOT IN',
-            'INCLUDES', 'EXCLUDES'
-        };
-    }
 }
