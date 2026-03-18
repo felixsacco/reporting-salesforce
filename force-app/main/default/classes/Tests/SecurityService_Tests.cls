@@ -1,10 +1,10 @@
 /**
  * @description Enhanced test class for SecurityService.
- *              Tests security validation, field options, and operator whitelist.
+ *              Tests security validation and field option access behaviors.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
- * @version 1.2.0
+ * @version 1.2.1
  */
 @isTest
 private class SecurityService_Tests {

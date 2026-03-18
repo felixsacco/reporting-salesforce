@@ -5,7 +5,7 @@
  * 
  * @author Agent Mritesh
  * @date 2026-02-17
- * @version 1.2.0
+ * @version 1.2.1
  */
 public with sharing class SoqlQueryBuilder {
     
