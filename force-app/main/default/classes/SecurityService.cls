@@ -20,7 +20,7 @@ public with sharing class SecurityService {
         // Validate Object Access
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         if (objectType == null) {
-            throw new IllegalArgumentException('No object specified. Null passed as the parameter' + objectName);
+            throw new IllegalArgumentException('Invalid Object: ' + objectName);
         }
         if (!objectType.getDescribe().isAccessible()) {
             throw new SecurityException('Cannot access object: ' + objectName);
