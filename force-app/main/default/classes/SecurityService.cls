@@ -17,7 +17,7 @@ public with sharing class SecurityService {
      * @throws SecurityException if the user lacks access to the object or any field
      */
     public static void validateReadAccess(String objectName, List<String> fields) {
-        // 1. Validate Object Access
+        // Validate Object Access
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         if (objectType == null) {
             throw new IllegalArgumentException('No object specified. Null passed as the parameter' + objectName);
@@ -26,7 +26,7 @@ public with sharing class SecurityService {
             throw new SecurityException('Cannot access object: ' + objectName);
         }
 
-        // 2. Validate Field Access (FLS)
+        // Validate Field Access (FLS)
         Map<String, Schema.SObjectField> fieldMap = objectType.getDescribe().fields.getMap();
         for (String field : fields) {
             if (!fieldMap.containsKey(field) || !fieldMap.get(field).getDescribe().isAccessible()) {
@@ -34,7 +34,7 @@ public with sharing class SecurityService {
             }
         }
         
-        // 3. Log successful validation for audit trail
+        // Log successful validation for audit trail
         System.debug(LoggingLevel.FINE, 
             'Security validation passed: Object=' + objectName + 
             ', User=' + UserInfo.getUserId() + 
@@ -43,6 +43,7 @@ public with sharing class SecurityService {
 
     /**
      * DEPRECATED: Use getAccessibleFieldOptions instead for richer metadata.
+     * Will be removed in future versions.
      * @description Retrieves a sorted list of field API names for a given SObject 
      *              that the current user has access to view.
      * @param objectName The API name of the SObject.
