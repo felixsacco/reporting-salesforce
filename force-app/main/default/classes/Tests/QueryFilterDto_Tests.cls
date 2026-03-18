@@ -2,7 +2,7 @@
  * @description Test class for QueryFilterDto.
  *              Tests the parseValues method for multi-value operator support.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
  */
@@ -29,7 +29,7 @@ private class QueryFilterDto_Tests {
     static void testParseValues_SemicolonSeparated() {
         // Test parsing semicolon-separated values
         QueryFilterDto filter = new QueryFilterDto();
-        filter.value = 'value1;value2;value3';
+        filter.value = 'value1; value2; value3';
         
         Test.startTest();
         List<String> values = filter.parseValues();
@@ -107,7 +107,7 @@ private class QueryFilterDto_Tests {
         List<String> values = filter.parseValues();
         Test.stopTest();
         
-        // Should skip empty/whitespace-only elements
+        // Should skip empty elements
         System.assertEquals(3, values.size(), 'Should skip empty elements');
         System.assertEquals('value1', values[0], 'First non-empty value');
         System.assertEquals('value2', values[1], 'Second non-empty value');

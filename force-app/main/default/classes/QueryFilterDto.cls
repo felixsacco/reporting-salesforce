@@ -2,7 +2,7 @@
  * @description Data Transfer Object (DTO) representing a single filter condition in a query.
  *              Contains the field name, operator, and value(s) for filtering.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
  */
@@ -32,10 +32,6 @@ public class QueryFilterDto {
      *              Used for operators like IN, NOT IN, INCLUDES, and EXCLUDES.
      * 
      * @return A List of trimmed, non-empty values. Returns empty list if value is null or blank.
-     * 
-     * @example
-     * filter.value = 'red, blue, green';
-     * List<String> values = filter.parseValues(); // Returns ['red', 'blue', 'green']
      */
     public List<String> parseValues() {
         if (String.isBlank(this.value)) {
