@@ -15,7 +15,7 @@
     </classAccesses>
 
     <classAccesses>
-        <apexClass>AccessChecker</apexClass>
+        <apexClass>SecurityService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
 

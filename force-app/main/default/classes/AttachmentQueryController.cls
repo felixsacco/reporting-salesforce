@@ -20,7 +20,7 @@ public with sharing class AttachmentQueryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getObjectFields(String objectName) {
         try {
-            return AccessChecker.getAccessibleFields(objectName); 
+            return SecurityService.getAccessibleFields(objectName); 
         } catch (Exception e) {
             throw new AuraHandledException('Error retrieving fields: ' + e.getMessage());
         }
@@ -37,7 +37,7 @@ public with sharing class AttachmentQueryController {
     @AuraEnabled(cacheable=true)
     public static List<SchemaFieldOption> getObjectFieldOptions(String objectName) {
         try {
-            return AccessChecker.getAccessibleFieldOptions(objectName);
+            return SecurityService.getAccessibleFieldOptions(objectName);
         } catch (Exception e) {
             throw new AuraHandledException('Error retrieving field options: ' + e.getMessage());
         }
@@ -61,11 +61,11 @@ public with sharing class AttachmentQueryController {
                                              Integer limitValue) {
         try {
             // 1. Security Check (Object and Field Level Security)
-            AccessChecker.validateReadAccess(objectName, fields);
+            SecurityService.validateReadAccess(objectName, fields);
             
             // 2. Validate operators against whitelist
             if (filters != null) {
-                Set<String> allowedOps = AccessChecker.getAllowedOperators();
+                Set<String> allowedOps = SecurityService.getAllowedOperators();
                 for (QueryFilterDto filter : filters) {
                     String op = filter.operator.toUpperCase().trim();
                     if (!allowedOps.contains(op)) {

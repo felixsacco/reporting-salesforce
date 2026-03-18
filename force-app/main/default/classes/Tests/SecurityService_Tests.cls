@@ -1,5 +1,5 @@
 /**
- * @description Enhanced test class for AccessChecker.
+ * @description Enhanced test class for SecurityService.
  *              Tests security validation, field options, and operator whitelist.
  * 
  * @author Agent Mritesh
@@ -7,7 +7,7 @@
  * @version 1.2.0
  */
 @isTest
-private class AccessChecker_Tests {
+private class SecurityService_Tests {
     
     @isTest
     static void testValidateReadAccess_Positive() {
@@ -17,7 +17,7 @@ private class AccessChecker_Tests {
         
         Test.startTest();
         try {
-            AccessChecker.validateReadAccess(objectName, fields);
+            SecurityService.validateReadAccess(objectName, fields);
             System.assert(true, 'Should not throw exception for valid Account access');
         } catch (Exception e) {
             System.assert(false, 'Should not have thrown an exception for valid Account access: ' + e.getMessage());
@@ -32,7 +32,7 @@ private class AccessChecker_Tests {
         
         Test.startTest();
         try {
-            AccessChecker.validateReadAccess(invalidObj, fields);
+            SecurityService.validateReadAccess(invalidObj, fields);
             System.assert(false, 'Should have thrown exception for invalid object');
         } catch (IllegalArgumentException e) {
             System.assert(e.getMessage().contains('Invalid Object'), 'Should indicate invalid object');
@@ -49,7 +49,7 @@ private class AccessChecker_Tests {
         
         Test.startTest();
         try {
-            AccessChecker.validateReadAccess(objectName, fields);
+            SecurityService.validateReadAccess(objectName, fields);
             System.assert(false, 'Should have thrown exception for invalid field');
         } catch (SecurityException e) {
             System.assert(e.getMessage().contains('Access denied'), 'Should indicate access denied');
@@ -62,7 +62,7 @@ private class AccessChecker_Tests {
     @isTest
     static void testGetAccessibleFields() {
         Test.startTest();
-        List<String> fields = AccessChecker.getAccessibleFields('Account');
+        List<String> fields = SecurityService.getAccessibleFields('Account');
         Test.stopTest();
         
         System.assertNotEquals(null, fields, 'Result should not be null');
@@ -74,7 +74,7 @@ private class AccessChecker_Tests {
     @isTest
     static void testGetAccessibleFields_InvalidObject() {
         Test.startTest();
-        List<String> fields = AccessChecker.getAccessibleFields('InvalidObject__c');
+        List<String> fields = SecurityService.getAccessibleFields('InvalidObject__c');
         Test.stopTest();
         
         System.assertEquals(0, fields.size(), 'Should return empty list for invalid object');
@@ -83,7 +83,7 @@ private class AccessChecker_Tests {
     @isTest
     static void testGetAccessibleFields_BlankObjectName() {
         Test.startTest();
-        List<String> fields = AccessChecker.getAccessibleFields('');
+        List<String> fields = SecurityService.getAccessibleFields('');
         Test.stopTest();
         
         System.assertEquals(0, fields.size(), 'Should return empty list for blank object name');
@@ -92,7 +92,7 @@ private class AccessChecker_Tests {
     @isTest
     static void testGetAccessibleFields_NullObjectName() {
         Test.startTest();
-        List<String> fields = AccessChecker.getAccessibleFields(null);
+        List<String> fields = SecurityService.getAccessibleFields(null);
         Test.stopTest();
         
         System.assertEquals(0, fields.size(), 'Should return empty list for null object name');
@@ -102,7 +102,7 @@ private class AccessChecker_Tests {
     static void testGetAccessibleFieldOptions_Account() {
         // Test that field options include both label and value
         Test.startTest();
-        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('Account');
+        List<SchemaFieldOption> options = SecurityService.getAccessibleFieldOptions('Account');
         Test.stopTest();
         
         System.assertNotEquals(null, options, 'Should return options');
@@ -127,7 +127,7 @@ private class AccessChecker_Tests {
     static void testGetAccessibleFieldOptions_InvalidObject() {
         // Test with non-existent object
         Test.startTest();
-        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('InvalidObject__c');
+        List<SchemaFieldOption> options = SecurityService.getAccessibleFieldOptions('InvalidObject__c');
         Test.stopTest();
         
         System.assertEquals(0, options.size(), 'Should return empty list for invalid object');
@@ -137,7 +137,7 @@ private class AccessChecker_Tests {
     static void testGetAccessibleFieldOptions_EmptyObjectName() {
         // Test with blank object name
         Test.startTest();
-        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('');
+        List<SchemaFieldOption> options = SecurityService.getAccessibleFieldOptions('');
         Test.stopTest();
         
         System.assertEquals(0, options.size(), 'Should return empty list for blank object');
@@ -147,7 +147,7 @@ private class AccessChecker_Tests {
     static void testGetAccessibleFieldOptions_NullObjectName() {
         // Test with null object name
         Test.startTest();
-        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions(null);
+        List<SchemaFieldOption> options = SecurityService.getAccessibleFieldOptions(null);
         Test.stopTest();
         
         System.assertEquals(0, options.size(), 'Should return empty list for null object');
@@ -157,7 +157,7 @@ private class AccessChecker_Tests {
     static void testGetAccessibleFieldOptions_Sorted() {
         // Test that results are sorted by label
         Test.startTest();
-        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('Account');
+        List<SchemaFieldOption> options = SecurityService.getAccessibleFieldOptions('Account');
         Test.stopTest();
         
         // Verify sorting (compare adjacent elements)
@@ -173,7 +173,7 @@ private class AccessChecker_Tests {
     static void testGetAllowedOperators() {
         // Test operator whitelist
         Test.startTest();
-        Set<String> operators = AccessChecker.getAllowedOperators();
+        Set<String> operators = SecurityService.getAllowedOperators();
         Test.stopTest();
         
         // Verify expected operators are present
@@ -202,7 +202,7 @@ private class AccessChecker_Tests {
     static void testGetAccessibleFieldOptions_Attachment() {
         // Test with Attachment object specifically
         Test.startTest();
-        List<SchemaFieldOption> options = AccessChecker.getAccessibleFieldOptions('Attachment');
+        List<SchemaFieldOption> options = SecurityService.getAccessibleFieldOptions('Attachment');
         Test.stopTest();
         
         System.assertNotEquals(null, options, 'Should return options for Attachment');

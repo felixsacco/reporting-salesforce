@@ -101,7 +101,7 @@ This project follows an Enterprise Layered Architecture of SF (Model-View-Contro
 
 - LWC: Handles UI and Event Delegation (queryBuilder, resultsDisplay).
 - Apex Controller: Entry point for the Business Logic (AttachmentQueryController).
-- Service Layer: Handles Security logic (AccessChecker).
+- Service Layer: Handles Security logic (SecurityService).
 - Domain Layer: Handles SOQL construction (SoqlQueryBuilder).
 
 <br>
@@ -118,8 +118,8 @@ ReportingOnAttachments/
             │   ├── AttachmentQueryController.cls   # The Coordinator/Broker
             │   ├── AttachmentQueryController.cls-meta.xml
             │   │
-            │   ├── AccessChecker.cls               # The Security Guard
-            │   ├── AccessChecker.cls-meta.xml
+            │   ├── SecurityService.cls             # The Security Guard
+            │   ├── SecurityService.cls-meta.xml
             │   │
             │   ├── SoqlQueryBuilder.cls            # The Query String Builder
             │   ├── SoqlQueryBuilder.cls-meta.xml

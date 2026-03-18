@@ -3,11 +3,11 @@
  *              Validates object-level security, field-level security (FLS), and provides
  *              accessible field metadata. Changed to 'with sharing' for explicit sharing enforcement.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
  */
-public with sharing class AccessChecker {
+public with sharing class SecurityService {
     
     /**
      * @description Validates that the current user has read access to the SObject and all specified fields.
@@ -20,10 +20,10 @@ public with sharing class AccessChecker {
         // 1. Validate Object Access
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         if (objectType == null) {
-            throw new IllegalArgumentException('Invalid Object: ' + objectName);
+            throw new IllegalArgumentException('No object specified. Null passed as the parameter' + objectName);
         }
         if (!objectType.getDescribe().isAccessible()) {
-            throw new SecurityException('No access to object: ' + objectName);
+            throw new SecurityException('Cannot access object: ' + objectName);
         }
 
         // 2. Validate Field Access (FLS)

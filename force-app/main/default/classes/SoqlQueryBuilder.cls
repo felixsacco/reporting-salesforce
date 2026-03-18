@@ -102,7 +102,7 @@ public with sharing class SoqlQueryBuilder {
      */
     private static String validateOperator(String operator) {
         String normalized = operator.toUpperCase().trim();
-        Set<String> allowedOperators = AccessChecker.getAllowedOperators();
+        Set<String> allowedOperators = SecurityService.getAllowedOperators();
         
         if (!allowedOperators.contains(normalized)) {
             throw new IllegalArgumentException('Unsupported operator: ' + operator);
