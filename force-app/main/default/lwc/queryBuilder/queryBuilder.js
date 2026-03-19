@@ -2,7 +2,7 @@
  * @description Query builder component for dynamic SOQL queries.
  *              Enhanced with pill container UI for multi-value operators and field labels.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
  */

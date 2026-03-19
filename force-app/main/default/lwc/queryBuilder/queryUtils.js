@@ -2,7 +2,7 @@
  * @description Utility module for queryBuilder component.
  *              Contains constants, factory functions, and validation logic.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
  */
@@ -10,18 +10,18 @@
 // Object options for the dropdown
 export const OBJECT_OPTIONS = [
     { label: 'Attachment', value: 'Attachment' },
-    { label: 'ContentDocument', value: 'ContentDocument' }
+    { label: 'Content Document', value: 'ContentDocument' }
 ];
 
 // Operator options with multi-value flags
 export const OPERATOR_OPTIONS = [
-    { label: 'Equals (=)', value: '=', requiresMultiValue: false },
-    { label: 'Not Equals (!=)', value: '!=', requiresMultiValue: false },
-    { label: 'Less Than (<)', value: '<', requiresMultiValue: false },
-    { label: 'Less or Equal (<=)', value: '<=', requiresMultiValue: false },
-    { label: 'Greater Than (>)', value: '>', requiresMultiValue: false },
-    { label: 'Greater or Equal (>=)', value: '>=', requiresMultiValue: false },
-    { label: 'Contains (LIKE)', value: 'LIKE', requiresMultiValue: false },
+    { label: 'Equals', value: '=', requiresMultiValue: false },
+    { label: 'Not Equals', value: '!=', requiresMultiValue: false },
+    { label: 'Less Than', value: '<', requiresMultiValue: false },
+    { label: 'Less or Equal', value: '<=', requiresMultiValue: false },
+    { label: 'Greater Than', value: '>', requiresMultiValue: false },
+    { label: 'Greater or Equal', value: '>=', requiresMultiValue: false },
+    { label: 'Contains', value: 'LIKE', requiresMultiValue: false },
     { label: 'In List (IN)', value: 'IN', requiresMultiValue: true },
     { label: 'Not In List (NOT IN)', value: 'NOT IN', requiresMultiValue: true },
     { label: 'Includes (Multi-Select)', value: 'INCLUDES', requiresMultiValue: true },
@@ -34,7 +34,7 @@ export const OPERATOR_OPTIONS = [
  */
 export const createNewFilter = () => {
     return {
-        id: Date.now(),
+        // id: Date.now(),
         fieldName: '',
         operator: '=',
         value: '',
