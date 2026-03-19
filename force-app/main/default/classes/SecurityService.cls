@@ -53,6 +53,7 @@ public with sharing class SecurityService {
      * @param objectName The API name of the SObject.
      * @return A List of accessible field API names.
      */
+    @Deprecated
     @AuraEnabled(cacheable=true)
     public static List<String> getAccessibleFields(String objectName) {
         if (String.isBlank(objectName)) {
