@@ -84,7 +84,6 @@ public with sharing class SoqlQueryBuilder {
     /**
      * @description Determines whether a query is compatible with WITH SECURITY_ENFORCED.
      *              Incompatible when:
-     *                - Relationship fields are selected (dot notation in SELECT list)
      *                - Aggregate functions present
      *                - TYPEOF expression present
      *
@@ -105,11 +104,6 @@ public with sharing class SoqlQueryBuilder {
         }
 
         String selectClause = query.substring(selectPos + 6, fromPos).trim();
-
-        // Relationship fields
-        if (selectClause.contains('.')) {
-            return false;
-        }
 
         // Aggregate functions
         if (upper.contains('COUNT(') || upper.contains('SUM(') ||
