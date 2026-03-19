@@ -8,3 +8,6 @@
 string tempvar = 'Enter_your_name_here';
 System.debug('Hello World!');
 System.debug('My name is ' + tempvar);
+
+
+System.debug(Utils.formatDateTimeValue('2024-01-15T10:30:00Z', 'CreatedDate'));
