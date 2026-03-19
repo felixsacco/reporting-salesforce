@@ -100,7 +100,7 @@ A demo of how to assign a permission set to a user can be found in the following
 This project follows an Enterprise Layered Architecture of SF (Model-View-Controller):
 
 - LWC: Handles UI and Event Delegation (queryBuilder, resultsDisplay).
-- Apex Controllers: Entry points for business logic (QueryController, AttachmentQueryController).
+- Apex Controllers: Entry points for business logic (QueryController).
 - Service Layer: Handles Security logic (SecurityService).
 - Domain Layer: Handles SOQL construction (SoqlQueryBuilder).
 - Utility and DTO Layer: Shared helpers and transfer objects (Utils, QueryFilterDto, SchemaFieldOption).
@@ -116,7 +116,7 @@ Reporting-on-Attachments-Salesforce/
 ├── force-app/
 │   └── main/
 │       └── default/
-│           ├── classes/                         # BACKEND (APEX)
+│           ├── classes/                         
 │           │   ├── AttachmentQueryController.cls
 │           │   ├── QueryController.cls
 │           │   ├── QueryFilterDto.cls
@@ -124,10 +124,10 @@ Reporting-on-Attachments-Salesforce/
 │           │   ├── SecurityService.cls
 │           │   ├── SoqlQueryBuilder.cls
 │           │   ├── Utils.cls
-│           │   └── Tests/                       # TEST CLASSES (APEX)
+│           │   └── Tests/                       
 │           ├── flexipages/
 │           │   └── Reports_On_Files.flexipage-meta.xml
-│           ├── lwc/                             # FRONTEND (LWC)
+│           ├── lwc/                            
 │           │   ├── queryBuilder/
 │           │   │   ├── __tests__/
 │           │   │   ├── queryBuilder.html
