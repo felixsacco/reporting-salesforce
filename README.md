@@ -154,12 +154,14 @@ Reporting-on-Attachments-Salesforce/
     └── soql/
 ```
 
-### Security
+### Known Issues and Limitations
 
-This application adheres to strict Salesforce security standards:
-
-- Enforces Object & Field Level Security: Users cannot see data they don't have access to. (Not useful on Standard Attachment and ContentDocument entities, but it has been added for future feature additions)
-- SOQL Injection Protection: All user inputs are escaped and sanitized before query execution.
+- The applicaiton currently lacks uniform error handling and user feedback for various failure scenarios (e.g., no results, query errors, etc.).
+- The SOQL query construction logic does not yet support logical operators (AND/OR) between filter conditions, which limits the complexity of queries that can be built through the UI.
+- The code structure and organization are still in the early stages of development, and there is room for improvement in terms of modularity, separation of concerns, and adherence to best practices in Apex and LWC development.
+- The application currently does not support pagination for query results, which could lead to performance issues when dealing with large datasets.
+- The validation logic for user inputs in the filter conditions is basic and could be enhanced to provide better guidance and error prevention for users when building their queries.
+- Parent object fields are not currently supported in the field selection for filter conditions, which limits the ability to create more complex queries that involve related objects.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
