@@ -3,11 +3,6 @@
     <description>Grants access to the Reporting on Attachments application logic and components.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Reporting On Files</label>
-    
-    <!-- <classAccesses>
-        <apexClass>AttachmentQueryController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses> -->
 
     <classAccesses>
         <apexClass>QueryController</apexClass>

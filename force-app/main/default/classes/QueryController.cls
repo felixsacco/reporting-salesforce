@@ -44,11 +44,19 @@ public with sharing class QueryController {
                                              List<QueryFilterDto> filters,
                                              Integer limitValue) {
         try {
+            System.debug(LoggingLevel.FINE, 
+                'Starting query execution: Object=' + objectName + 
+                ', User=' + UserInfo.getUserId() + 
+                ', Fields=' + String.join(fields, ','));
+
             // Security Check (Object and Field Level Security)
+            if (String.isBlank(objectName) || fields == null || fields.isEmpty()) {
+                throw new IllegalArgumentException('Object name and fields are required');
+            }
             SecurityService.validateReadAccess(objectName, fields);
 
             // Validate operators against whitelist
-            if (filters != null) {
+            if (filters != null && !filters.isEmpty()) {
                 List<String> filterFields = new List<String>();
                 Set<String> allowedOps = Utils.ALLOWED_OPERATORS;
 
@@ -56,7 +64,8 @@ public with sharing class QueryController {
                     String op = filter.operator.toUpperCase().trim();
                     if (!allowedOps.contains(op)) {
                         throw new IllegalArgumentException(
-                            'Unsupported operator: ' + filter.operator
+                            'Validation Error: [Unsupported operator: ' 
+                            + filter.operator + ']'
                         );
                     }
                     filterFields.add(filter.fieldName);
@@ -68,6 +77,10 @@ public with sharing class QueryController {
 
             // Build Query with type-aware value formatting
             String query = SoqlQueryBuilder.buildQuery(objectName, fields, filters, limitValue);
+
+            System.debug(LoggingLevel.FINE, 
+                'Query constructed: Query=' + query + 
+                ', User=' + UserInfo.getUserId());
 
             // Security.stripInaccessible() is being considerd for future enhancements.
             return Database.query(query);

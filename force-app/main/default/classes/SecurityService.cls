@@ -17,23 +17,36 @@ public with sharing class SecurityService {
      * @throws SecurityException if the user lacks access to the object or any field
      */
     public static void validateReadAccess(String objectName, List<String> fields) {
+
+        System.debug(
+            LoggingLevel.FINE, 
+            'Security check initiated by: ' 
+            + new DmlException()
+            .getStackTraceString()
+            .split('\n')[1]);
+
         if(String.isBlank(objectName) || fields == null || fields.isEmpty()) {
-            throw new IllegalArgumentException('Invalid input: Object name and fields must be provided');
+            String errorMsg = 'Invalid input: Object name and fields must be provided. Object: ' + objectName;
+            System.debug(LoggingLevel.ERROR, 'VALIDATION_FAILED | ' + errorMsg);
+            throw new IllegalArgumentException(errorMsg);
         }
         
         // Validate Object Access
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         if (objectType == null) {
+            System.debug(LoggingLevel.ERROR, 'OBJECT_NOT_FOUND | Object: ' + objectName);
             throw new IllegalArgumentException('Invalid Object: ' + objectName);
         }
         if (!objectType.getDescribe().isAccessible()) {
-            throw new SecurityException('Cannot access object: ' + objectName);
+            System.debug(LoggingLevel.WARN, 'ACCESS_DENIED_OBJECT | User: ' + UserInfo.getUserId() + ' Object: ' + objectName);
+        throw new SecurityException('Cannot access object: ' + objectName);
         }
 
         // Validate Field Access (FLS)
         Map<String, Schema.SObjectField> fieldMap = objectType.getDescribe().fields.getMap();
         for (String field : fields) {
             if (!fieldMap.containsKey(field) || !fieldMap.get(field).getDescribe().isAccessible()) {
+                System.debug(LoggingLevel.ERROR, 'FIELD_NOT_FOUND | Object: ' + objectName + ' Field: ' + field);
                 throw new SecurityException('Access denied or invalid field: ' + field);
             }
         }

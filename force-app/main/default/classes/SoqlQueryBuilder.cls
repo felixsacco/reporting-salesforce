@@ -33,11 +33,11 @@ public with sharing class SoqlQueryBuilder {
         if (filters != null && !filters.isEmpty()) {
             query += ' WHERE ' + buildWhereClauseTyped(objectName, filters);
         }
+        query = applySecurityEnforcementIfCompatible(query);
         
         // Add LIMIT with validation
         query += ' LIMIT ' + Utils.validateLimit(limitVal);
 
-        query = applySecurityEnforcementIfCompatible(query);
         
         return query;
     }
