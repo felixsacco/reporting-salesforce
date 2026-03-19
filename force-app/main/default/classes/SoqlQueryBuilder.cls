@@ -56,6 +56,68 @@ public with sharing class SoqlQueryBuilder {
     }
 
     /**
+     * @description Executes the provided SOQL query string with security enforcement when compatible.
+     *              If WITH SECURITY_ENFORCED is incompatible or fails, falls back to executing the
+     *              pre-validated query (caller must have performed object/field FLS checks).
+     *
+     * @param query The complete SOQL query string to execute
+     * @return List of SObject queried
+     */
+    public static List<SObject> executeQueryWithSecurity(String query) {
+        if (isCompatibleWithSecurityEnforced(query)) {
+            try {
+                String secureQuery = query + ' WITH SECURITY_ENFORCED';
+                return Database.query(secureQuery);
+            } catch (System.QueryException qe) {
+                // Fallback to non-security-enforced version relying on prior validation by caller
+            }
+        }
+        return Database.query(query);
+    }
+
+    /**
+     * @description Determines whether a query is compatible with WITH SECURITY_ENFORCED.
+     *              Incompatible when:
+     *                - Relationship fields are selected (dot notation in SELECT list)
+     *                - Aggregate functions present
+     *                - TYPEOF expression present
+     *
+     * @param query The SOQL query string
+     * @return True if compatible, false otherwise
+     */
+    public static Boolean isCompatibleWithSecurityEnforced(String query) {
+        if (query == null) return false;
+
+        String upper = query.toUpperCase();
+
+        Integer selectPos = upper.indexOf('SELECT');
+        Integer fromPos = upper.indexOf('FROM');
+        if (selectPos == -1 || fromPos == -1 || fromPos <= selectPos) {
+            return false;
+        }
+
+        String selectClause = query.substring(selectPos + 6, fromPos).trim();
+
+        // Relationship fields
+        if (selectClause.contains('.')) {
+            return false;
+        }
+
+        // Aggregate functions
+        if (upper.contains('COUNT(') || upper.contains('SUM(') ||
+            upper.contains('AVG(') || upper.contains('MAX(') || upper.contains('MIN(')) {
+            return false;
+        }
+
+        // TYPEOF expressions
+        if (upper.contains('TYPEOF')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @description Builds the WHERE clause of the query with type-aware value formatting.
      * 
      * @param objectName The API name of the SObject being queried

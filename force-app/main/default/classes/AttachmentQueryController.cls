@@ -3,7 +3,7 @@
  *              Provides @AuraEnabled methods for LWC components to interact with data securely.
  *              Enforces WITH SECURITY_ENFORCED when compatible.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.1
  */
@@ -79,8 +79,8 @@ public with sharing class AttachmentQueryController {
             // 3. Build Query with type-aware value formatting
             String query = SoqlQueryBuilder.buildTyped(objectName, fields, filters, limitValue);
             
-            // 4. Execute with security enforcement
-            return executeQueryWithSecurity(query, objectName, fields);
+            // 4. Execute with security enforcement (delegated to SoqlQueryBuilder)
+            return SoqlQueryBuilder.executeQueryWithSecurity(query);
             
         } catch (IllegalArgumentException iae) {
             throw new AuraHandledException('Validation Error: ' + iae.getMessage());
@@ -100,29 +100,6 @@ public with sharing class AttachmentQueryController {
      * @param fields The fields being selected (for logging)
      * @return List of SObject records
      */
-    private static List<SObject> executeQueryWithSecurity(String query, 
-                                                           String objectName, 
-                                                           List<String> fields) {
-        // Check if query is compatible with WITH SECURITY_ENFORCED
-        if (isCompatibleWithSecurityEnforced(query)) {
-            try {
-                // Attempt with WITH SECURITY_ENFORCED
-                String secureQuery = query + ' WITH SECURITY_ENFORCED';
-                System.debug(LoggingLevel.FINE, 
-                    'Executing query with SECURITY_ENFORCED: ' + secureQuery);
-                return Database.query(secureQuery);
-            } catch (System.QueryException qe) {
-                // Log warning and fallback
-                System.debug(LoggingLevel.WARN, 
-                    'WITH SECURITY_ENFORCED failed, using pre-validation fallback: ' + qe.getMessage());
-            }
-        }
-        
-        // Fallback: rely on pre-validation (already done in validateReadAccess)
-        System.debug(LoggingLevel.FINE, 
-            'Executing query with pre-validation (FLS checked): ' + query);
-        return Database.query(query);
-    }
 
     /**
      * @description Checks if a query is compatible with WITH SECURITY_ENFORCED.
@@ -131,36 +108,4 @@ public with sharing class AttachmentQueryController {
      * @param query The SOQL query string to check
      * @return True if compatible, false otherwise
      */
-    private static Boolean isCompatibleWithSecurityEnforced(String query) {
-        String upper = query.toUpperCase();
-        
-        // Extract SELECT clause
-        Integer selectPos = upper.indexOf('SELECT');
-        Integer fromPos = upper.indexOf('FROM');
-        if (selectPos == -1 || fromPos == -1) {
-            return false;
-        }
-        
-        String selectClause = query.substring(selectPos + 6, fromPos).trim();
-        
-        // WITH SECURITY_ENFORCED is incompatible with:
-        // 1. Relationship queries (dots in field names)
-        if (selectClause.contains('.')) {
-            return false;
-        }
-        
-        // 2. Aggregate functions
-        if (upper.contains('COUNT(') || upper.contains('SUM(') || 
-            upper.contains('AVG(') || upper.contains('MAX(') || upper.contains('MIN(')) {
-            return false;
-        }
-        
-        // 3. TYPEOF expressions
-        if (upper.contains('TYPEOF')) {
-            return false;
-        }
-        
-        // Query is compatible
-        return true;
-    }
 }
