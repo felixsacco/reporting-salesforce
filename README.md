@@ -100,55 +100,55 @@ A demo of how to assign a permission set to a user can be found in the following
 This project follows an Enterprise Layered Architecture of SF (Model-View-Controller):
 
 - LWC: Handles UI and Event Delegation (queryBuilder, resultsDisplay).
-- Apex Controller: Entry point for the Business Logic (QueryController).
+- Apex Controllers: Entry points for business logic (QueryController, AttachmentQueryController).
 - Service Layer: Handles Security logic (SecurityService).
 - Domain Layer: Handles SOQL construction (SoqlQueryBuilder).
+- Utility and DTO Layer: Shared helpers and transfer objects (Utils, QueryFilterDto, SchemaFieldOption).
 
 <br>
 The directory structure of the Application is shown below:
 
 ```
-ReportingOnAttachments/
-└── force-app/
-    └── main/
-        └── default/
-            │
-            ├── classes/  <-- BACKEND (APEX)
-            │   │
-            │   ├── QueryController.cls             # The Coordinator/Broker
-            │   ├── QueryController.cls-meta.xml
-            │   │
-            │   ├── SecurityService.cls             # The Security Guard
-            │   ├── SecurityService.cls-meta.xml
-            │   │
-            │   ├── SoqlQueryBuilder.cls            # The Query String Builder
-            │   ├── SoqlQueryBuilder.cls-meta.xml
-            │   │
-            │   ├── QueryFilterDto.cls              # Data Structure (DTO)
-            │   ├── QueryFilterDto.cls-meta.xml
-            │   │
-            │   └── Tests/  <-- TEST CLASSES (APEX)
-            │
-            └── lwc/  <-- FRONTEND (Javascript/HTML)
-                │
-                └── queryBuilder/       # User-Input Component
-                │   ├── __tests__
-                │   ├── queryBuilder.html
-                │   ├── queryBuilder.js
-                │   └── queryBuilder.js-meta.xml
-                │
-                └── resultsDisplay/     # Output Component
-                │   ├── __tests__
-                │   ├── resultsDisplay.html
-                │   ├── resultsDisplay.js
-                │   └── resultsDisplay.js-meta.xml
-                │
-                └── reportsOnFiles/     # Container Component
-                    ├── __tests__
-                    ├── queryBuilder.html
-                    ├── reportsOnFiles.js
-                    └── reportsOnFiles.js-meta.xml
-
+Reporting-on-Attachments-Salesforce/
+├── assets/
+├── config/
+│   └── project-scratch-def.json
+├── force-app/
+│   └── main/
+│       └── default/
+│           ├── classes/                         # BACKEND (APEX)
+│           │   ├── AttachmentQueryController.cls
+│           │   ├── QueryController.cls
+│           │   ├── QueryFilterDto.cls
+│           │   ├── SchemaFieldOption.cls
+│           │   ├── SecurityService.cls
+│           │   ├── SoqlQueryBuilder.cls
+│           │   ├── Utils.cls
+│           │   └── Tests/                       # TEST CLASSES (APEX)
+│           ├── flexipages/
+│           │   └── Reports_On_Files.flexipage-meta.xml
+│           ├── lwc/                             # FRONTEND (LWC)
+│           │   ├── queryBuilder/
+│           │   │   ├── __tests__/
+│           │   │   ├── queryBuilder.html
+│           │   │   └── queryBuilder.js
+│           │   ├── reportsOnFiles/
+│           │   │   ├── __tests__/
+│           │   │   ├── reportsOnFiles.html
+│           │   │   └── reportsOnFiles.js
+│           │   └── resultsDisplay/
+│           │       ├── __tests__/
+│           │       ├── resultsDisplay.html
+│           │       └── resultsDisplay.js
+│           ├── permissionsets/
+│           │   └── Reporting_On_Files.permissionset-meta.xml
+│           └── tabs/
+│               └── Reports_On_Files.tab-meta.xml
+├── manifest/
+│   └── package.xml
+└── scripts/
+    ├── apex/
+    └── soql/
 ```
 
 ### Security
