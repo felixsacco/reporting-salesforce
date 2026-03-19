@@ -162,11 +162,11 @@ This application adheres to strict Salesforce security standards:
 
 ## Roadmap
 
-- [ ] Have the list of fields display label names instead of API names
-- [ ] Add an opiton to have parent object dropdown/picklist alongside the file entity
-- [ ] Refine the filter condition UI element
-  - [ ] Make the value field reactive to the data type of the field selected
-  - [ ] Improve checks that validates the value field
+- [ ] Refine the application structure. (ongoing)
+- [ ] Add a select menu for fields selection in where clause.
+- [ ] Refine the filter condition UI element.
+- [ ] Add support for defining logical operators for the filter conditions.
+- [ ] Improve the validation logic of the user imputs in the filter conditions.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
