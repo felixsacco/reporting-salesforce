@@ -67,23 +67,17 @@ public with sharing class SoqlQueryBuilder {
     }
 
     /**
-     * @description Executes the provided SOQL query string with security enforcement when compatible.
-     *              If WITH SECURITY_ENFORCED is incompatible or fails, falls back to executing the
-     *              pre-validated query (caller must have performed object/field FLS checks).
+     * @description Helper to append WITH SECURITY_ENFORCED when the query is compatible.
+     *              QueryController (or caller) is responsible for executing the query.
      *
-     * @param query The complete SOQL query string to execute
-     * @return List of SObject queried
+     * @param query The complete SOQL query string
+     * @return Query string with WITH SECURITY_ENFORCED appended when compatible; original otherwise
      */
-    public static List<SObject> executeQueryWithSecurity(String query) {
+    public static String applySecurityEnforcementIfCompatible(String query) {
         if (isCompatibleWithSecurityEnforced(query)) {
-            try {
-                String secureQuery = query + ' WITH SECURITY_ENFORCED';
-                return Database.query(secureQuery);
-            } catch (System.QueryException qe) {
-                // Fallback to non-security-enforced version relying on prior validation by caller
-            }
+            return query + ' WITH SECURITY_ENFORCED';
         }
-        return Database.query(query);
+        return query;
     }
 
     /**

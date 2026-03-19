@@ -69,8 +69,9 @@ public with sharing class QueryController {
             // Build Query with type-aware value formatting
             String query = SoqlQueryBuilder.buildQuery(objectName, fields, filters, limitValue);
 
-            // Execute with security enforcement (delegated to SoqlQueryBuilder)
-            return SoqlQueryBuilder.executeQueryWithSecurity(query);
+            // Apply WITH SECURITY_ENFORCED when compatible, then execute here
+            String executableQuery = SoqlQueryBuilder.applySecurityEnforcementIfCompatible(query);
+            return Database.query(executableQuery);
 
         } catch (IllegalArgumentException iae) {
             throw new AuraHandledException('Validation Error: ' + iae.getMessage());
