@@ -75,8 +75,9 @@ After installing the application, you must assign the Permission Set to any user
 
 1. Go to Setup > Users > Permission Sets.
 2. Click on "Reporting On Files". (Navigate to 'R' section)
-3. Click Manage Assignments > Add Assignment.
-4. Select the users and click Assign.
+3. Use "Reporting On Files Access" for non-admin users.
+4. Click Manage Assignments > Add Assignment.
+5. Select the users and click Assign.
 
 A demo of how to assign a permission set to a user can be found in the following video.<br>
 <a href="https://youtu.be/Z6XlW5OlVmc">How to Add a Permission Set to a Salesforce User</a>
