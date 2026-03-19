@@ -15,7 +15,7 @@ public with sharing class SoqlQueryBuilder {
     /**
      * @description Builds a SOQL query with type-aware value formatting.
      *              Validates operators, determines field types, and formats values accordingly.
-     *              Security and access must be handled by the caller.
+     *              Accessible objects and fields must be handled by the caller.
      * 
      * @param objectName The API name of the SObject to query
      * @param fields List of field API names to select
