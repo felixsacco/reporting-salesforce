@@ -1,8 +1,8 @@
 {
   "packageDirectories": [
     {
-      "versionName": "V1.1",
-      "versionNumber": "1.1.0.NEXT",
+      "versionName": "V1.2",
+      "versionNumber": "1.2.1.NEXT",
       "path": "force-app",
       "default": true,
       "package": "Report_On_Files",

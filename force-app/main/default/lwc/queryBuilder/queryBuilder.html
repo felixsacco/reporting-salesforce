@@ -25,9 +25,9 @@
       >
       </lightning-dual-listbox>
 
-      <div class="slds-m-top_medium">
+      <div class="slds-var-m-top_medium">
         <div class="slds-grid">
-          <div class="slds-m-top_small slds-text-color_weak">
+          <div class="slds-var-m-top_small slds-text-color_weak">
             <p>Filter by field values</p>
           </div>
           <div class="slds-col_bump-left">
@@ -42,11 +42,11 @@
         </div>
 
         <template if:true={filters.length}>
-          <div class="slds-m-top_small">
+          <div class="slds-var-m-top_small">
             <template for:each={filters} for:item="filter">
               <div
                 key={filter.id}
-                class="slds-grid slds-gutters slds-m-bottom_small slds-grid_vertical-align-end"
+                class="slds-grid slds-gutters slds-var-m-bottom_small slds-grid_vertical-align-end"
               >
                 <div class="slds-col slds-size_3-of-12">
                   <lightning-combobox
@@ -75,16 +75,46 @@
                 </div>
 
                 <div class="slds-col slds-size_5-of-12">
-                  <lightning-input
-                    label="Value"
-                    value={filter.value}
-                    data-id={filter.id}
-                    data-name="value"
-                    onchange={handleFilterChange}
-                    placeholder="Enter value"
-                    required
-                  >
-                  </lightning-input>
+                  <!-- Single Value Input (default) -->
+                  <template if:false={filter.requiresMultiValue}>
+                    <lightning-input
+                      label="Value"
+                      value={filter.value}
+                      data-id={filter.id}
+                      data-name="value"
+                      onchange={handleFilterChange}
+                      placeholder="Enter value"
+                      required
+                    >
+                    </lightning-input>
+                  </template>
+                  
+                  <!-- Multi-Value Input (for IN, NOT IN, INCLUDES, EXCLUDES) -->
+                  <template if:true={filter.requiresMultiValue}>
+                    <div class="slds-form-element">
+                      <label class="slds-form-element__label">Values</label>
+                      <div class="slds-form-element__control">
+                        <template if:true={filter.valueItems.length}>
+                          <lightning-pill-container
+                            items={filter.valueItems}
+                            data-id={filter.id}
+                            onitemremove={handlePillRemove}
+                          >
+                          </lightning-pill-container>
+                        </template>
+                        <lightning-input
+                          placeholder="Type value and press Enter"
+                          value={filter.currentInputValue}
+                          data-id={filter.id}
+                          data-name="currentInputValue"
+                          onchange={handleMultiValueInput}
+                          onkeyup={handleMultiValueKeyup}
+                          class="slds-var-m-top_x-small"
+                        >
+                        </lightning-input>
+                      </div>
+                    </div>
+                  </template>
                 </div>
 
                 <div class="slds-col slds-size_1-of-12">
@@ -103,7 +133,7 @@
         </template>
 
         <template if:false={filters.length}>
-          <div class="slds-m-top_small slds-text-color_weak">
+          <div class="slds-var-m-top_small slds-text-color_weak">
             <p>No conditions added. Click "Add Condition" to filter results.</p>
           </div>
         </template>

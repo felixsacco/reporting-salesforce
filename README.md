@@ -42,12 +42,15 @@ Once you have an Org and the credentials, please go through the installation ste
 <h4>Option 1: Install via Package Link (Recommended for Admins)</h4>
 
 You can install this application directly into your Sandbox or Production environment using the Unlocked Package link.<br>
-<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tWU000000F74PYAS">Install Package</a>
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tWU000000QLgjYAG">Install Package</a>
 
 1. Click the link above.
 2. Log in to your Salesforce Org.
 3. Select "Install for All Users".
 4. Click <strong>Install</strong>.
+
+if prompted for installation key, use the following:
+test1234
 
 <h4>Option 2: Deploy from Source (Recommended for Developers)</h4>
 If you have the Salesforce CLI installed, you can deploy the source code directly.
@@ -100,55 +103,55 @@ A demo of how to assign a permission set to a user can be found in the following
 This project follows an Enterprise Layered Architecture of SF (Model-View-Controller):
 
 - LWC: Handles UI and Event Delegation (queryBuilder, resultsDisplay).
-- Apex Controller: Entry point for the Business Logic (AttachmentQueryController).
-- Service Layer: Handles Security logic (AccessChecker).
+- Apex Controllers: Entry points for business logic (QueryController).
+- Service Layer: Handles Security logic (SecurityService).
 - Domain Layer: Handles SOQL construction (SoqlQueryBuilder).
+- Utility and DTO Layer: Shared helpers and transfer objects (Utils, QueryFilterDto, SchemaFieldOption).
 
 <br>
 The directory structure of the Application is shown below:
 
 ```
-ReportingOnAttachments/
-└── force-app/
-    └── main/
-        └── default/
-            │
-            ├── classes/  <-- BACKEND (APEX)
-            │   │
-            │   ├── AttachmentQueryController.cls   # The Coordinator/Broker
-            │   ├── AttachmentQueryController.cls-meta.xml
-            │   │
-            │   ├── AccessChecker.cls               # The Security Guard
-            │   ├── AccessChecker.cls-meta.xml
-            │   │
-            │   ├── SoqlQueryBuilder.cls            # The Query String Builder
-            │   ├── SoqlQueryBuilder.cls-meta.xml
-            │   │
-            │   ├── QueryFilterDto.cls              # Data Structure (DTO)
-            │   ├── QueryFilterDto.cls-meta.xml
-            │   │
-            │   └── Tests/  <-- TEST CLASSES (APEX)
-            │
-            └── lwc/  <-- FRONTEND (Javascript/HTML)
-                │
-                └── queryBuilder/       # User-Input Component
-                │   ├── __tests__
-                │   ├── queryBuilder.html
-                │   ├── queryBuilder.js
-                │   └── queryBuilder.js-meta.xml
-                │
-                └── resultsDisplay/     # Output Component
-                │   ├── __tests__
-                │   ├── resultsDisplay.html
-                │   ├── resultsDisplay.js
-                │   └── resultsDisplay.js-meta.xml
-                │
-                └── reportsOnFiles/     # Container Component
-                    ├── __tests__
-                    ├── queryBuilder.html
-                    ├── reportsOnFiles.js
-                    └── reportsOnFiles.js-meta.xml
-
+Reporting-on-Attachments-Salesforce/
+├── assets/
+├── config/
+│   └── project-scratch-def.json
+├── force-app/
+│   └── main/
+│       └── default/
+│           ├── classes/                         
+│           │   ├── AttachmentQueryController.cls
+│           │   ├── QueryController.cls
+│           │   ├── QueryFilterDto.cls
+│           │   ├── SchemaFieldOption.cls
+│           │   ├── SecurityService.cls
+│           │   ├── SoqlQueryBuilder.cls
+│           │   ├── Utils.cls
+│           │   └── Tests/                       
+│           ├── flexipages/
+│           │   └── Reports_On_Files.flexipage-meta.xml
+│           ├── lwc/                            
+│           │   ├── queryBuilder/
+│           │   │   ├── __tests__/
+│           │   │   ├── queryBuilder.html
+│           │   │   └── queryBuilder.js
+│           │   ├── reportsOnFiles/
+│           │   │   ├── __tests__/
+│           │   │   ├── reportsOnFiles.html
+│           │   │   └── reportsOnFiles.js
+│           │   └── resultsDisplay/
+│           │       ├── __tests__/
+│           │       ├── resultsDisplay.html
+│           │       └── resultsDisplay.js
+│           ├── permissionsets/
+│           │   └── Reporting_On_Files.permissionset-meta.xml
+│           └── tabs/
+│               └── Reports_On_Files.tab-meta.xml
+├── manifest/
+│   └── package.xml
+└── scripts/
+    ├── apex/
+    └── soql/
 ```
 
 ### Security

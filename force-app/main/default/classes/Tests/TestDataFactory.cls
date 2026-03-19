@@ -1,7 +1,15 @@
+/**
+ * @description Test data factory for creating records used by Apex unit tests.
+ *              Provides helpers to create parent records and related
+ *              Attachment records for reporting scenarios.
+ */
 @IsTest
 public class TestDataFactory {
+
+    /**
+     * @description Creates an Account with a related Attachment test record.
+     */
     public static void createAttachment() {
-        // Create parent account
         Account acc = new Account(Name = 'Test Account');
         insert acc;
         
