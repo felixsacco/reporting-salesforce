@@ -164,16 +164,7 @@ This application adheres to strict Salesforce security standards:
 
 - [ ] Refine the application structure. (ongoing)
 - [ ] Add a select menu for fields selection in where clause.
-- [ ] Refine the filter condition UI element.
 - [ ] Add support for defining logical operators for the filter conditions.
 - [ ] Improve the validation logic of the user imputs in the filter conditions.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
-
-<!--
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues)
-## Contact
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
--->
