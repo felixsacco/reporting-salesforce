@@ -151,10 +151,11 @@ public with sharing class SoqlQueryBuilder {
             String formattedValue = Utils.formatValueByType(fieldDescribe, operator, filter.value, filter.fieldName);
             
             // Build condition
-            String field = String.escapeSingleQuotes(fieldDescribe.getName());
+            String field = fieldDescribe.getName();
             conditions.add(field + ' ' + operator + ' ' + formattedValue);
         }
         
+        // Logical Operator to be configurable in the next version.
         return String.join(conditions, ' AND ');
     }
 }
