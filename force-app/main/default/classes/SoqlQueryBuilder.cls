@@ -83,6 +83,9 @@ public with sharing class SoqlQueryBuilder {
 
     /**
      * @description Determines whether a query is compatible with WITH SECURITY_ENFORCED.
+     *              Current implementation does not qualify for these checks
+     *              but keeping it since it provides a structure for future enhancements.
+     *              
      *              Incompatible when:
      *                - Aggregate functions present
      *                - TYPEOF expression present
