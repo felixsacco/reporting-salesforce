@@ -3,7 +3,7 @@
  *              Supports all standard field types and validates operators against a whitelist.
  *              Changed to 'with sharing' for explicit sharing enforcement.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.1
  */
@@ -50,6 +50,8 @@ public with sharing class SoqlQueryBuilder {
     }
     
     /**
+     * DEPRECATED - Use buildTyped instead for enhanced type-aware query building.
+     * Will be removed in future versions.
      * @description Legacy build method for backward compatibility.
      *              Delegates to buildTyped for consistent behavior.
      * 
@@ -72,14 +74,14 @@ public with sharing class SoqlQueryBuilder {
      * @throws IllegalArgumentException if operator or value is invalid for field type
      */
     private static String buildWhereClauseTyped(String objectName, List<QueryFilterDto> filters) {
-        // Get object describe for field type information
+
         Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
         Map<String, Schema.SObjectField> fieldMap = objectType.getDescribe().fields.getMap();
         
         List<String> conditions = new List<String>();
         
         for (QueryFilterDto filter : filters) {
-            // Get field describe
+
             Schema.SObjectField fieldToken = fieldMap.get(filter.fieldName);
             if (fieldToken == null) {
                 throw new IllegalArgumentException('Invalid field: ' + filter.fieldName);
@@ -87,14 +89,12 @@ public with sharing class SoqlQueryBuilder {
             
             Schema.DescribeFieldResult fieldDescribe = fieldToken.getDescribe();
             
-            // Validate and normalize operator
             String operator = validateOperator(filter.operator);
             
-            // Format value based on field type
             String formattedValue = formatValueByType(fieldDescribe, operator, filter.value, filter.fieldName);
             
             // Build condition
-            String field = String.escapeSingleQuotes(filter.fieldName);
+            String field = String.escapeSingleQuotes(fieldDescribe.getName());
             conditions.add(field + ' ' + operator + ' ' + formattedValue);
         }
         
@@ -172,6 +172,11 @@ public with sharing class SoqlQueryBuilder {
         } catch (IllegalArgumentException e) {
             // Re-throw with context preserved
             throw e;
+        } catch (Exception e) {
+            // Catch-all for unexpected errors during formatting
+            throw new Exception(
+                'Error formatting value for field "' + fieldName + '": ' + e.getMessage()
+            );
         }
     }
 
@@ -209,7 +214,7 @@ public with sharing class SoqlQueryBuilder {
             for (String val : values) {
                 String trimmed = val.trim();
                 try {
-                    Decimal.valueOf(trimmed); // Validate each value
+                    Decimal.valueOf(trimmed);
                     formatted.add(trimmed);
                 } catch (Exception e) {
                     throw new IllegalArgumentException(

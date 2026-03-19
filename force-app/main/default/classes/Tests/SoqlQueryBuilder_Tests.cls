@@ -2,7 +2,7 @@
  * @description Comprehensive test class for SoqlQueryBuilder.
  *              Tests type-aware query building, operator validation, and security features.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.1
  */
