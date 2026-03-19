@@ -36,6 +36,8 @@ public with sharing class SoqlQueryBuilder {
         
         // Add LIMIT with validation
         query += ' LIMIT ' + Utils.validateLimit(limitVal);
+
+        query = applySecurityEnforcementIfCompatible(query);
         
         return query;
     }
@@ -68,7 +70,6 @@ public with sharing class SoqlQueryBuilder {
 
     /**
      * @description Helper to append WITH SECURITY_ENFORCED when the query is compatible.
-     *              QueryController (or caller) is responsible for executing the query.
      *
      * @param query The complete SOQL query string
      * @return Query string with WITH SECURITY_ENFORCED appended when compatible; original otherwise
@@ -95,6 +96,8 @@ public with sharing class SoqlQueryBuilder {
 
         String upper = query.toUpperCase();
 
+        // Malformed query check that AgentForce decided to implement.
+        // Keeping it because it doesn´t seem to hurt the functionallity.
         Integer selectPos = upper.indexOf('SELECT');
         Integer fromPos = upper.indexOf('FROM');
         if (selectPos == -1 || fromPos == -1 || fromPos <= selectPos) {
