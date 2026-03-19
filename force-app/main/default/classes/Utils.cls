@@ -1,3 +1,8 @@
+/**
+ * @description Shared utility class for query validation and value formatting.
+ *              Centralizes operator validation, LIMIT normalization, and
+ *              type-aware SOQL literal formatting used by query builder services.
+ */
 public with sharing class Utils {
     // Constants for limit validation.
     private static final Integer MIN_LIMIT = 1;
@@ -12,6 +17,9 @@ public with sharing class Utils {
         'INCLUDES', 'EXCLUDES'
     };
 
+    /**
+     * @description Explicit default constructor.
+     */
     public Utils() {
 
     }
@@ -78,6 +86,15 @@ public with sharing class Utils {
         }
     }
 
+    /**
+     * @description Validates and formats numeric values for SOQL predicates.
+     *              Supports single-value comparisons and IN/NOT IN lists.
+     *
+     * @param value Raw user value
+     * @param operator Normalized SOQL operator
+     * @param fieldName Field API name used in validation messages
+     * @return Formatted numeric literal or list literal for SOQL
+     */
     @TestVisible
     private static String formatNumericValue(String value, String operator, String fieldName) {
         if (operator == 'LIKE') {
@@ -121,6 +138,13 @@ public with sharing class Utils {
         return value.trim();
     }
 
+    /**
+     * @description Validates and normalizes boolean values to SOQL TRUE/FALSE literals.
+     *
+     * @param value Raw user value
+     * @param fieldName Field API name used in validation messages
+     * @return TRUE or FALSE
+     */
     @TestVisible
     private static String formatBooleanValue(String value, String fieldName) {
         String normalized = value.trim().toLowerCase();
@@ -136,6 +160,14 @@ public with sharing class Utils {
         );
     }
 
+    /**
+     * @description Validates and formats date input as a SOQL-compatible literal.
+     *              Accepts ISO dates and supported relative date literals.
+     *
+     * @param value Raw user value
+     * @param fieldName Field API name used in validation messages
+     * @return Formatted date literal string
+     */
     @TestVisible
     private static String formatDateValue(String value, String fieldName) {
         String trimmed = value.trim();
@@ -155,6 +187,12 @@ public with sharing class Utils {
         }
     }
 
+    /**
+     * @description Returns whether the provided token matches a supported SOQL date literal.
+     *
+     * @param value Candidate literal
+     * @return True when the token is a supported date literal
+     */
     @TestVisible
     private static Boolean isDateLiteral(String value) {
         String upper = value.toUpperCase();
@@ -171,6 +209,14 @@ public with sharing class Utils {
                upper.startsWith('NEXT_N_YEARS:');
     }
 
+    /**
+     * @description Validates and formats datetime input as a UTC ISO-8601 SOQL literal.
+     *              Accepts values with or without trailing Z.
+     *
+     * @param value Raw user value
+     * @param fieldName Field API name used in validation messages
+     * @return Normalized UTC datetime literal string
+     */
     @TestVisible
     private static String formatDateTimeValue(String value, String fieldName) {
         String trimmed = value.trim();
@@ -196,6 +242,15 @@ public with sharing class Utils {
         }
     }
 
+    /**
+     * @description Escapes and formats text values for SOQL predicates.
+     *              Handles LIKE wildcards and IN/NOT IN list serialization.
+     *
+     * @param value Raw user value
+     * @param operator Normalized SOQL operator
+     * @param fieldName Field API name used in validation messages
+     * @return Quoted SOQL literal or list literal
+     */
     @TestVisible
     private static String formatTextValue(String value, String operator, String fieldName) {
         String escaped = String.escapeSingleQuotes(value);
@@ -235,6 +290,14 @@ public with sharing class Utils {
         return '\'' + escaped + '\'';
     }
 
+    /**
+     * @description Formats multi-select picklist values for INCLUDES/EXCLUDES predicates.
+     *
+     * @param value Raw semicolon-delimited user value
+     * @param operator Normalized SOQL operator
+     * @param fieldName Field API name used in validation messages
+     * @return Parenthesized and quoted multi-select literal list
+     */
     @TestVisible
     private static String formatMultiSelectValue(String value, String operator, String fieldName) {
         if (operator != 'INCLUDES' && operator != 'EXCLUDES') {
