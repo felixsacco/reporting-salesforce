@@ -10,6 +10,7 @@
 public with sharing class AttachmentQueryController {
 
     /**
+     * DEPRECATED - Use getObjectFieldOptions instead for enhanced field metadata retrieval.
      * @description Retrieves accessible field API names for a given object.
      *              Legacy method maintained for potential backward compatibility.
      * 
@@ -17,6 +18,7 @@ public with sharing class AttachmentQueryController {
      * @return List of accessible field API names
      * @throws AuraHandledException if an error occurs
      */
+    @Deprecated
     @AuraEnabled(cacheable=true)
     public static List<String> getObjectFields(String objectName) {
         try {
@@ -60,12 +62,14 @@ public with sharing class AttachmentQueryController {
                                              List<QueryFilterDto> filters, 
                                              Integer limitValue) {
         try {
-            // 1. Security Check (Object and Field Level Security)
+            // Security Check (Object and Field Level Security)
             SecurityService.validateReadAccess(objectName, fields);
             
-            // 2. Validate operators against whitelist
+            // Validate operators against whitelist
             if (filters != null) {
+                List<String> filterFields = new List<String>();
                 Set<String> allowedOps = SoqlQueryBuilder.ALLOWED_OPERATORS;
+                
                 for (QueryFilterDto filter : filters) {
                     String op = filter.operator.toUpperCase().trim();
                     if (!allowedOps.contains(op)) {
@@ -73,13 +77,17 @@ public with sharing class AttachmentQueryController {
                             'Unsupported operator: ' + filter.operator
                         );
                     }
+                    filterFields.add(filter.fieldName);
                 }
+
+                // Validate field access for filter fields
+                SecurityService.validateReadAccess(objectName, filterFields);
             }
             
-            // 3. Build Query with type-aware value formatting
+            // Build Query with type-aware value formatting
             String query = SoqlQueryBuilder.buildQuery(objectName, fields, filters, limitValue);
             
-            // 4. Execute with security enforcement (delegated to SoqlQueryBuilder)
+            // Execute with security enforcement (delegated to SoqlQueryBuilder)
             return SoqlQueryBuilder.executeQueryWithSecurity(query);
             
         } catch (IllegalArgumentException iae) {
@@ -90,22 +98,4 @@ public with sharing class AttachmentQueryController {
             throw new AuraHandledException('Unexpected Error: ' + e.getMessage());
         }
     }
-
-    /**
-     * @description Executes the query with WITH SECURITY_ENFORCED when compatible.
-     *              Falls back to pre-validated execution if incompatible.
-     * 
-     * @param query The complete SOQL query string
-     * @param objectName The object being queried (for logging)
-     * @param fields The fields being selected (for logging)
-     * @return List of SObject records
-     */
-
-    /**
-     * @description Checks if a query is compatible with WITH SECURITY_ENFORCED.
-     *              Returns false if query contains incompatible constructs.
-     * 
-     * @param query The SOQL query string to check
-     * @return True if compatible, false otherwise
-     */
 }
