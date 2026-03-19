@@ -50,7 +50,7 @@ public with sharing class QueryController {
             // Validate operators against whitelist
             if (filters != null) {
                 List<String> filterFields = new List<String>();
-                Set<String> allowedOps = SoqlQueryBuilder.ALLOWED_OPERATORS;
+                Set<String> allowedOps = Utils.ALLOWED_OPERATORS;
 
                 for (QueryFilterDto filter : filters) {
                     String op = filter.operator.toUpperCase().trim();
