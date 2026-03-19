@@ -2,6 +2,10 @@
  * @description Shared utility class for query validation and value formatting.
  *              Centralizes operator validation, LIMIT normalization, and
  *              type-aware SOQL literal formatting used by query builder services.
+ * 
+ * @author Mritesh
+ * @date 2026-03-19
+ * @version 1.2.1
  */
 public with sharing class Utils {
     // Constants for limit validation.
