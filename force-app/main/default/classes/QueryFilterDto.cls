@@ -27,6 +27,10 @@ public class QueryFilterDto {
     public String value { get; set; }
 
     /**
+     * Current implementation does not use this function.
+     * The values are being parsed manually in the Util funcitons.
+     * Future improvements will utilize this function as a centralized parsing method for filter values.
+     * 
      * @description Parses the value string into a list of individual values.
      *              Supports both comma-separated and semicolon-separated values.
      *              Used for operators like IN, NOT IN, INCLUDES, and EXCLUDES.
