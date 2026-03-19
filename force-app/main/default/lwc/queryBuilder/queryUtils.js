@@ -22,8 +22,8 @@ export const OPERATOR_OPTIONS = [
     { label: 'Greater Than', value: '>', requiresMultiValue: false },
     { label: 'Greater or Equal', value: '>=', requiresMultiValue: false },
     { label: 'Contains', value: 'LIKE', requiresMultiValue: false },
-    { label: 'In List (IN)', value: 'IN', requiresMultiValue: true },
-    { label: 'Not In List (NOT IN)', value: 'NOT IN', requiresMultiValue: true },
+    { label: 'IN', value: 'IN', requiresMultiValue: true },
+    { label: 'NOT IN', value: 'NOT IN', requiresMultiValue: true },
     { label: 'Includes (Multi-Select)', value: 'INCLUDES', requiresMultiValue: true },
     { label: 'Excludes (Multi-Select)', value: 'EXCLUDES', requiresMultiValue: true }
 ];
@@ -34,7 +34,7 @@ export const OPERATOR_OPTIONS = [
  */
 export const createNewFilter = () => {
     return {
-        // id: Date.now(),
+        id: Date.now(), // Unique ID for tracking the element
         fieldName: '',
         operator: '=',
         value: '',

@@ -2,7 +2,7 @@
  * @description Container component for the Reporting on Files application.
  *              Enhanced to forward field labels from queryBuilder to resultsDisplay.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
  */

@@ -2,7 +2,7 @@
  * @description Results display component for query results.
  *              Enhanced to display field labels in column headers instead of API names.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
  */
