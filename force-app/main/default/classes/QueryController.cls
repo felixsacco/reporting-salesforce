@@ -62,13 +62,14 @@ public with sharing class QueryController {
                     filterFields.add(filter.fieldName);
                 }
 
-                // Validate field access for filter fields
+                // Validate field access of filter fields
                 SecurityService.validateReadAccess(objectName, filterFields);
             }
 
             // Build Query with type-aware value formatting
             String query = SoqlQueryBuilder.buildQuery(objectName, fields, filters, limitValue);
 
+            // Security.stripInaccessible() is being considerd for future enhancements.
             return Database.query(query);
 
         } catch (IllegalArgumentException iae) {
