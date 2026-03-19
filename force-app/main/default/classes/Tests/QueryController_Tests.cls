@@ -1,5 +1,5 @@
 /**
- * @description Enhanced test class for AttachmentQueryController.
+ * @description Enhanced test class for QueryController.
  *              Tests new methods, security enforcement, and type-aware queries.
  * 
  * @author Mritesh
@@ -7,7 +7,7 @@
  * @version 1.2.1
  */
 @isTest
-private class AttachmentQueryController_Tests {
+private class QueryController_Tests {
     
     @testSetup
     static void setupData() {
@@ -37,7 +37,7 @@ private class AttachmentQueryController_Tests {
     @isTest
     static void testGetObjectFields() {
         Test.startTest();
-        List<String> fields = AttachmentQueryController.getObjectFields('Attachment');
+        List<String> fields = QueryController.getObjectFields('Attachment');
         Test.stopTest();
         
         System.assert(fields.contains('Name'), 'Should return Name field');
@@ -50,7 +50,7 @@ private class AttachmentQueryController_Tests {
         // Test new method returns label/value pairs
         Test.startTest();
         List<SchemaFieldOption> options = 
-            AttachmentQueryController.getObjectFieldOptions('Attachment');
+            QueryController.getObjectFieldOptions('Attachment');
         Test.stopTest();
         
         System.assertNotEquals(null, options, 'Should return options');
@@ -83,7 +83,7 @@ private class AttachmentQueryController_Tests {
         filters.add(f1);
         
         Test.startTest();
-        List<SObject> results = AttachmentQueryController.executeQuery(
+        List<SObject> results = QueryController.executeQuery(
             'Attachment', fields, filters, 10);
         Test.stopTest();
         
@@ -98,7 +98,7 @@ private class AttachmentQueryController_Tests {
         
         Test.startTest();
         try {
-            AttachmentQueryController.executeQuery(
+            QueryController.executeQuery(
                 'Attachment', fields, new List<QueryFilterDto>(), 10);
             System.assert(false, 'Should have thrown exception');
         } catch (Exception e) {
@@ -118,7 +118,7 @@ private class AttachmentQueryController_Tests {
         
         Test.startTest();
         try {
-            AttachmentQueryController.executeQuery('Attachment', 
+            QueryController.executeQuery('Attachment', 
                 new List<String>{'Name'}, 
                 new List<QueryFilterDto>{filter}, 10);
             System.assert(false, 'Should throw exception for invalid operator');
@@ -136,7 +136,7 @@ private class AttachmentQueryController_Tests {
         List<String> fields = new List<String>{'Name', 'Id'};
         
         Test.startTest();
-        List<SObject> results = AttachmentQueryController.executeQuery(
+        List<SObject> results = QueryController.executeQuery(
             'Attachment', fields, new List<QueryFilterDto>(), 10);
         Test.stopTest();
         
@@ -154,7 +154,7 @@ private class AttachmentQueryController_Tests {
         filter.value = '100';
         
         Test.startTest();
-        List<SObject> results = AttachmentQueryController.executeQuery(
+        List<SObject> results = QueryController.executeQuery(
             'Attachment', 
             new List<String>{'Name', 'BodyLength'}, 
             new List<QueryFilterDto>{filter}, 10);
@@ -180,7 +180,7 @@ private class AttachmentQueryController_Tests {
         filter.value = 'Report';
         
         Test.startTest();
-        List<SObject> results = AttachmentQueryController.executeQuery(
+        List<SObject> results = QueryController.executeQuery(
             'Attachment', 
             new List<String>{'Name'}, 
             new List<QueryFilterDto>{filter}, 10);
@@ -196,7 +196,7 @@ private class AttachmentQueryController_Tests {
         // Test that excessive limits are clamped server-side
         Test.startTest();
         try {
-            List<SObject> results = AttachmentQueryController.executeQuery(
+            List<SObject> results = QueryController.executeQuery(
                 'Attachment', 
                 new List<String>{'Name'}, 
                 new List<QueryFilterDto>(), 10000);
@@ -223,7 +223,7 @@ private class AttachmentQueryController_Tests {
         filter2.value = '50';
         
         Test.startTest();
-        List<SObject> results = AttachmentQueryController.executeQuery(
+        List<SObject> results = QueryController.executeQuery(
             'Attachment', 
             new List<String>{'Name', 'BodyLength'}, 
             new List<QueryFilterDto>{filter1, filter2}, 10);
@@ -242,7 +242,7 @@ private class AttachmentQueryController_Tests {
     static void testExecuteQuery_NoFilters() {
         // Test query without filters (should return all accessible records)
         Test.startTest();
-        List<SObject> results = AttachmentQueryController.executeQuery(
+        List<SObject> results = QueryController.executeQuery(
             'Attachment', 
             new List<String>{'Name', 'Id'}, 
             new List<QueryFilterDto>(), 10);
@@ -256,7 +256,7 @@ private class AttachmentQueryController_Tests {
     static void testExecuteQuery_NullFilters() {
         // Test query with null filters parameter
         Test.startTest();
-        List<SObject> results = AttachmentQueryController.executeQuery(
+        List<SObject> results = QueryController.executeQuery(
             'Attachment', 
             new List<String>{'Name', 'Id'}, 
             null, 

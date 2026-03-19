@@ -8,6 +8,11 @@
         <apexClass>AttachmentQueryController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+
+    <classAccesses>
+        <apexClass>QueryController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     
     <classAccesses>
         <apexClass>QueryFilterDto</apexClass>

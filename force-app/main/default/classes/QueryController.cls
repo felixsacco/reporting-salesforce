@@ -1,37 +1,19 @@
 /**
- * @description DEPRECATED compatibility wrapper for QueryController.
- *              Keeps existing AuraEnabled endpoints available for legacy callers.
+ * @description Controller class for the Reporting on Files application.
+ *              Formerly named AttachmentQueryController.
+ *              Provides @AuraEnabled methods for LWC components to interact with data securely.
+ *              Enforces WITH SECURITY_ENFORCED when compatible.
  *
  * @author Mritesh
  * @date 2026-03-19
- * @version 1.3.0
+ * @version 1.2.1
  */
-@Deprecated
-public with sharing class AttachmentQueryController {
-
-    /**
-     * DEPRECATED - Use getObjectFieldOptions instead for enhanced field metadata retrieval.
-     * @description Retrieves accessible field API names for a given object.
-     *              Legacy method maintained for potential backward compatibility.
-     * 
-     * @param objectName The API name of the SObject
-     * @return List of accessible field API names
-     * @throws AuraHandledException if an error occurs
-     */
-    @Deprecated
-    @AuraEnabled(cacheable=true)
-    public static List<String> getObjectFields(String objectName) {
-        try {
-            return SecurityService.getAccessibleFields(objectName);
-        } catch (Exception e) {
-            throw new AuraHandledException('Error retrieving fields: ' + e.getMessage());
-        }
-    }
+public with sharing class QueryController {
 
     /**
      * @description Retrieves accessible field options (label + API name) for a given object.
      *              This is the new enhanced method that returns SchemaFieldOption DTOs.
-     * 
+     *
      * @param objectName The API name of the SObject
      * @return List of SchemaFieldOption objects containing label and value pairs
      * @throws AuraHandledException if an error occurs
@@ -44,11 +26,11 @@ public with sharing class AttachmentQueryController {
             throw new AuraHandledException('Error retrieving field options: ' + e.getMessage());
         }
     }
-    
+
     /**
      * @description Executes a dynamic SOQL query with security enforcement.
      *              Validates object/field access, operators, and builds type-aware query.
-     * 
+     *
      * @param objectName The API name of the SObject to query
      * @param fields List of field API names to select
      * @param filters List of filter conditions (can be null or empty)
@@ -57,9 +39,9 @@ public with sharing class AttachmentQueryController {
      * @throws AuraHandledException if security validation fails or query is invalid
      */
     @AuraEnabled
-    public static List<SObject> executeQuery(String objectName, 
-                                             List<String> fields, 
-                                             List<QueryFilterDto> filters, 
+    public static List<SObject> executeQuery(String objectName,
+                                             List<String> fields,
+                                             List<QueryFilterDto> filters,
                                              Integer limitValue) {
         try {
             // Security Check (Object and Field Level Security)

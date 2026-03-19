@@ -8,8 +8,8 @@
  */
 import { LightningElement } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import executeQuery from "@salesforce/apex/AttachmentQueryController.executeQuery";
-import getObjectFieldOptions from "@salesforce/apex/AttachmentQueryController.getObjectFieldOptions";
+import executeQuery from "@salesforce/apex/QueryController.executeQuery";
+import getObjectFieldOptions from "@salesforce/apex/QueryController.getObjectFieldOptions";
 
 // Import from our Utility Module
 import {

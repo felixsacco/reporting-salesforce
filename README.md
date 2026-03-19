@@ -100,7 +100,7 @@ A demo of how to assign a permission set to a user can be found in the following
 This project follows an Enterprise Layered Architecture of SF (Model-View-Controller):
 
 - LWC: Handles UI and Event Delegation (queryBuilder, resultsDisplay).
-- Apex Controller: Entry point for the Business Logic (AttachmentQueryController).
+- Apex Controller: Entry point for the Business Logic (QueryController).
 - Service Layer: Handles Security logic (SecurityService).
 - Domain Layer: Handles SOQL construction (SoqlQueryBuilder).
 
@@ -115,8 +115,8 @@ ReportingOnAttachments/
             │
             ├── classes/  <-- BACKEND (APEX)
             │   │
-            │   ├── AttachmentQueryController.cls   # The Coordinator/Broker
-            │   ├── AttachmentQueryController.cls-meta.xml
+            │   ├── QueryController.cls             # The Coordinator/Broker
+            │   ├── QueryController.cls-meta.xml
             │   │
             │   ├── SecurityService.cls             # The Security Guard
             │   ├── SecurityService.cls-meta.xml

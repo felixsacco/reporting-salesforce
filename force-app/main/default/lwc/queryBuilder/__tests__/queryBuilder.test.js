@@ -1,11 +1,11 @@
 import { createElement } from "@lwc/engine-dom";
 import QueryBuilder from "c/queryBuilder";
-import getObjectFields from "@salesforce/apex/AttachmentQueryController.getObjectFields";
-// import executeQuery from '@salesforce/apex/AttachmentQueryController.executeQuery';
+import getObjectFieldOptions from "@salesforce/apex/QueryController.getObjectFieldOptions";
+// import executeQuery from '@salesforce/apex/QueryController.executeQuery';
 
 // Mock Apex Calls
 jest.mock(
-  "@salesforce/apex/AttachmentQueryController.getObjectFields",
+  "@salesforce/apex/QueryController.getObjectFieldOptions",
   () => {
     return {
       default: jest.fn()
@@ -15,7 +15,7 @@ jest.mock(
 );
 
 jest.mock(
-  "@salesforce/apex/AttachmentQueryController.executeQuery",
+  "@salesforce/apex/QueryController.executeQuery",
   () => {
     return {
       default: jest.fn()
@@ -37,7 +37,9 @@ describe("c-query-builder", () => {
 
   it("loads fields on initialization", async () => {
     // Assign mock value for resolved promise
-    getObjectFields.mockResolvedValue(MOCK_FIELDS);
+    getObjectFieldOptions.mockResolvedValue(
+      MOCK_FIELDS.map((fieldName) => ({ label: fieldName, value: fieldName }))
+    );
 
     const element = createElement("c-query-builder", {
       is: QueryBuilder
@@ -49,7 +51,7 @@ describe("c-query-builder", () => {
     await Promise.resolve();
 
     // Verify Apex was called
-    expect(getObjectFields).toHaveBeenCalled();
+    expect(getObjectFieldOptions).toHaveBeenCalled();
 
     // Verify fields are populated in dual listbox
     const listbox = element.shadowRoot.querySelector("lightning-dual-listbox");
@@ -57,7 +59,7 @@ describe("c-query-builder", () => {
   });
 
   // it('executes query when button clicked', async () => {
-  //     getObjectFields.mockResolvedValue(MOCK_FIELDS);
+  //     getObjectFieldOptions.mockResolvedValue(MOCK_FIELDS.map((fieldName) => ({ label: fieldName, value: fieldName })));
   //     executeQuery.mockResolvedValue(MOCK_RESULTS);
 
   //     const element = createElement('c-query-builder', {
