@@ -4,7 +4,7 @@
  *
  * @author Mritesh
  * @date 2026-03-19
- * @version 1.3.0
+ * @version 1.2.1
  */
 public with sharing class AttachmentQueryController {
 
