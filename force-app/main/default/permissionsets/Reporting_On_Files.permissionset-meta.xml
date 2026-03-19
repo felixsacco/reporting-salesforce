@@ -35,7 +35,7 @@
     </classAccesses>
 
     <classAccesses>
-        <apexClass>SchemaFieldOptions</apexClass>
+        <apexClass>SchemaFieldOption</apexClass>
         <enabled>true</enabled>
     </classAccesses>
 
