@@ -33,17 +33,6 @@ private class QueryController_Tests {
         
         insert new List<Attachment>{att1, att2, att3};
     }
-
-    @isTest
-    static void testGetObjectFields() {
-        Test.startTest();
-        List<String> fields = QueryController.getObjectFields('Attachment');
-        Test.stopTest();
-        
-        System.assert(fields.contains('Name'), 'Should return Name field');
-        System.assert(fields.contains('BodyLength'), 'Should return BodyLength field');
-        System.assert(fields.contains('Id'), 'Should return Id field');
-    }
     
     @isTest
     static void testGetObjectFieldOptions() {

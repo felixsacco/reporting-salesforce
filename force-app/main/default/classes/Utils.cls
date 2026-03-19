@@ -84,7 +84,7 @@ public with sharing class Utils {
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new Exception(
+            throw new IllegalArgumentException(
                 'Error formatting value for field "' + fieldName + '": ' + e.getMessage()
             );
         }

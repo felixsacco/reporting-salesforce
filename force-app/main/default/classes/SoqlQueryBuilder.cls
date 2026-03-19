@@ -46,7 +46,6 @@ public with sharing class SoqlQueryBuilder {
      * DEPRECATED - Use buildQuery instead for enhanced type-aware query building.
      * Retained for backward compatibility.
      */
-    @Deprecated
     public static String buildTyped(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitVal) {
         return buildQuery(objectName, fields, filters, limitVal);
     }
@@ -57,7 +56,6 @@ public with sharing class SoqlQueryBuilder {
      * @description Legacy build method for backward compatibility.
      *              Delegates to buildQuery for consistent behavior.
      */
-    @Deprecated
     public static String build(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitVal) {
         return buildQuery(objectName, fields, filters, limitVal);
     }

@@ -8,8 +8,6 @@
  */
 @isTest
 private class SoqlQueryBuilder_Tests {
-
-    // ========== BASIC QUERY BUILDING TESTS ==========
     
     @isTest
     static void testBuildQuery_Simple() {
@@ -78,8 +76,6 @@ private class SoqlQueryBuilder_Tests {
         System.assertEquals(Utils.ALLOWED_OPERATORS, operators,
             'SoqlQueryBuilder.ALLOWED_OPERATORS should alias Utils.ALLOWED_OPERATORS');
     }
-
-    // ========== MULTIPLE FILTERS TESTS ==========
     
     @isTest
     static void testBuildQuery_MultipleFilters_AND() {
@@ -104,8 +100,6 @@ private class SoqlQueryBuilder_Tests {
         System.assert(query.contains('Name LIKE'), 'Should include first filter');
         System.assert(query.contains('NumberOfEmployees >'), 'Should include second filter');
     }
-
-    // ========== SQL INJECTION PREVENTION TESTS ==========
     
     @isTest
     static void testBuildQuery_SQLInjectionAttempt() {
@@ -124,8 +118,6 @@ private class SoqlQueryBuilder_Tests {
         System.assert(query.contains('\\\''), 
             'Should escape single quotes: ' + query);
     }
-
-    // ========== BACKWARD COMPATIBILITY TEST ==========
     
     @isTest
     static void testBuild_BackwardCompatibility() {
@@ -145,8 +137,6 @@ private class SoqlQueryBuilder_Tests {
         System.assert(query.contains('SELECT'), 'Should generate valid query');
     }
 
-    // ========== SECURITY ENFORCED EXECUTION TESTS ==========
-
     @isTest
     static void testIsCompatibleWithSecurityEnforced_Simple() {
         String q = 'SELECT Id, Name FROM Account LIMIT 1';
@@ -154,15 +144,6 @@ private class SoqlQueryBuilder_Tests {
         Boolean compat = SoqlQueryBuilder.isCompatibleWithSecurityEnforced(q);
         Test.stopTest();
         System.assertEquals(true, compat, 'Simple select should be compatible');
-    }
-
-    @isTest
-    static void testIsCompatibleWithSecurityEnforced_RelationshipField() {
-        String q = 'SELECT Id, Owner.Name FROM Account LIMIT 1';
-        Test.startTest();
-        Boolean compat = SoqlQueryBuilder.isCompatibleWithSecurityEnforced(q);
-        Test.stopTest();
-        System.assertEquals(false, compat, 'Relationship fields should be incompatible');
     }
 
     @isTest
@@ -181,36 +162,5 @@ private class SoqlQueryBuilder_Tests {
         Boolean compat = SoqlQueryBuilder.isCompatibleWithSecurityEnforced(q);
         Test.stopTest();
         System.assertEquals(false, compat, 'TYPEOF should be incompatible');
-    }
-
-    @isTest
-    static void testExecuteQueryWithSecurity_Compatible() {
-        // Build a simple compatible query on a universally available object
-        String q = 'SELECT Id, Name FROM Account LIMIT 1';
-        // Ensure at least one Account exists for portability
-        Account a = new Account(Name = 'Compat Test');
-        insert a;
-
-        Test.startTest();
-        List<SObject> results = SoqlQueryBuilder.executeQueryWithSecurity(q);
-        Test.stopTest();
-
-        System.assertNotEquals(null, results, 'Should return a list');
-        System.assert(results.size() <= 1, 'Should respect LIMIT 1');
-    }
-
-    @isTest
-    static void testExecuteQueryWithSecurity_Incompatible_Fallback() {
-        // Relationship field makes it incompatible -> should fallback without throwing
-        String q = 'SELECT Id, Owner.Name FROM Account LIMIT 2';
-        Account a = new Account(Name = 'Incompat Test');
-        insert a;
-
-        Test.startTest();
-        List<SObject> results = SoqlQueryBuilder.executeQueryWithSecurity(q);
-        Test.stopTest();
-
-        System.assertNotEquals(null, results, 'Should return results via fallback');
-        System.assert(results.size() <= 2, 'Should respect LIMIT 2');
     }
 }

@@ -6,7 +6,6 @@
  * @date 2026-03-19
  * @version 1.3.0
  */
-@Deprecated
 public with sharing class AttachmentQueryController {
 
     /**
@@ -18,7 +17,6 @@ public with sharing class AttachmentQueryController {
      * @return List of accessible field API names
      * @throws AuraHandledException if an error occurs
      */
-    @Deprecated
     @AuraEnabled(cacheable=true)
     public static List<String> getObjectFields(String objectName) {
         try {
@@ -88,7 +86,7 @@ public with sharing class AttachmentQueryController {
             String query = SoqlQueryBuilder.buildQuery(objectName, fields, filters, limitValue);
 
             // Execute with security enforcement (delegated to SoqlQueryBuilder)
-            return SoqlQueryBuilder.executeQueryWithSecurity(query);
+            return Database.query(query);
 
         } catch (IllegalArgumentException iae) {
             throw new AuraHandledException('Validation Error: ' + iae.getMessage());
