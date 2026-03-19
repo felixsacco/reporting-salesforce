@@ -82,7 +82,7 @@ private class SoqlQueryBuilder_Tests {
     // ========== MULTIPLE FILTERS TESTS ==========
     
     @isTest
-    static void testBuildTyped_MultipleFilters_AND() {
+    static void testBuildQuery_MultipleFilters_AND() {
         QueryFilterDto filter1 = new QueryFilterDto();
         filter1.fieldName = 'Name';
         filter1.operator = 'LIKE';
@@ -94,7 +94,7 @@ private class SoqlQueryBuilder_Tests {
         filter2.value = '100';
         
         Test.startTest();
-        String query = SoqlQueryBuilder.buildTyped('Account', 
+        String query = SoqlQueryBuilder.buildQuery('Account', 
             new List<String>{'Name', 'NumberOfEmployees'}, 
             new List<QueryFilterDto>{filter1, filter2}, 10);
         Test.stopTest();
@@ -108,14 +108,14 @@ private class SoqlQueryBuilder_Tests {
     // ========== SQL INJECTION PREVENTION TESTS ==========
     
     @isTest
-    static void testBuildTyped_SQLInjectionAttempt() {
+    static void testBuildQuery_SQLInjectionAttempt() {
         QueryFilterDto filter = new QueryFilterDto();
         filter.fieldName = 'Name';
         filter.operator = '=';
         filter.value = 'test\' OR 1=1 --';
         
         Test.startTest();
-        String query = SoqlQueryBuilder.buildTyped('Account', 
+        String query = SoqlQueryBuilder.buildQuery('Account', 
             new List<String>{'Name'}, 
             new List<QueryFilterDto>{filter}, 10);
         Test.stopTest();

@@ -2,9 +2,9 @@
  * @description Enhanced test class for AttachmentQueryController.
  *              Tests new methods, security enforcement, and type-aware queries.
  * 
- * @author Agent Mritesh
+ * @author Mritesh
  * @date 2026-02-17
- * @version 1.2.0
+ * @version 1.2.1
  */
 @isTest
 private class AttachmentQueryController_Tests {

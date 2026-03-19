@@ -13,8 +13,9 @@ public with sharing class SoqlQueryBuilder {
     public static final Set<String> ALLOWED_OPERATORS = Utils.ALLOWED_OPERATORS;
     
     /**
-     * @description Builds a SOQL query with type-aware value formatting (new enhanced version).
+     * @description Builds a SOQL query with type-aware value formatting.
      *              Validates operators, determines field types, and formats values accordingly.
+     *              Security and access must be handled by the caller.
      * 
      * @param objectName The API name of the SObject to query
      * @param fields List of field API names to select
@@ -23,8 +24,8 @@ public with sharing class SoqlQueryBuilder {
      * @return A complete SOQL query string
      * @throws IllegalArgumentException if operator is invalid or value doesn't match field type
      */
-    public static String buildTyped(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitVal) {
-        // Build SELECT clause
+    public static String buildQuery(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitVal) {
+        // Build SELECT clause. Accessible fields should have been validated by caller.
         String query = 'SELECT ' + String.join(fields, ', ') + 
                       ' FROM ' + String.escapeSingleQuotes(objectName);
         
@@ -38,12 +39,21 @@ public with sharing class SoqlQueryBuilder {
         
         return query;
     }
+
+    /**
+     * DEPRECATED - Use buildQuery instead for enhanced type-aware query building.
+     * Retained for backward compatibility.
+     */
+    @Deprecated
+    public static String buildTyped(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitVal) {
+        return buildQuery(objectName, fields, filters, limitVal);
+    }
     
     /**
-     * DEPRECATED - Use buildTyped instead for enhanced type-aware query building.
+     * DEPRECATED - Use buildQuery instead for enhanced type-aware query building.
      * Will be removed in future versions.
      * @description Legacy build method for backward compatibility.
-     *              Delegates to buildTyped for consistent behavior.
+     *              Delegates to buildQuery for consistent behavior.
      * 
      * @param objectName The API name of the SObject to query
      * @param fields List of field API names to select
@@ -51,8 +61,9 @@ public with sharing class SoqlQueryBuilder {
      * @param limitVal The maximum number of records to return
      * @return A complete SOQL query string
      */
+    @Deprecated
     public static String build(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitVal) {
-        return buildTyped(objectName, fields, filters, limitVal);
+        return buildQuery(objectName, fields, filters, limitVal);
     }
 
     /**

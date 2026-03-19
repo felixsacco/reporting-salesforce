@@ -77,7 +77,7 @@ public with sharing class AttachmentQueryController {
             }
             
             // 3. Build Query with type-aware value formatting
-            String query = SoqlQueryBuilder.buildTyped(objectName, fields, filters, limitValue);
+            String query = SoqlQueryBuilder.buildQuery(objectName, fields, filters, limitValue);
             
             // 4. Execute with security enforcement (delegated to SoqlQueryBuilder)
             return SoqlQueryBuilder.executeQueryWithSecurity(query);
