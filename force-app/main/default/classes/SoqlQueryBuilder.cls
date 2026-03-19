@@ -56,12 +56,6 @@ public with sharing class SoqlQueryBuilder {
      * Will be removed in future versions.
      * @description Legacy build method for backward compatibility.
      *              Delegates to buildQuery for consistent behavior.
-     * 
-     * @param objectName The API name of the SObject to query
-     * @param fields List of field API names to select
-     * @param filters List of filter conditions (can be null or empty)
-     * @param limitVal The maximum number of records to return
-     * @return A complete SOQL query string
      */
     @Deprecated
     public static String build(String objectName, List<String> fields, List<QueryFilterDto> filters, Integer limitVal) {
@@ -148,6 +142,7 @@ public with sharing class SoqlQueryBuilder {
 
             String operator = Utils.validateOperator(filter.operator);
 
+            // Future version must pass the whole filter DTO to utilize the value parsing funciton of the DTO.
             String formattedValue = Utils.formatValueByType(fieldDescribe, operator, filter.value, filter.fieldName);
             
             // Build condition
