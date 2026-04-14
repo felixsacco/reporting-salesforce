@@ -1,4 +1,4 @@
-import { createElement } from '@lwc/engine-dom';
+import { createElement } from 'lwc';
 import ResultsDisplay from 'c/resultsDisplay';
 
 const MOCK_DATA = [
@@ -6,6 +6,10 @@ const MOCK_DATA = [
     { Id: '00P0000002', Name: 'File2.jpg', BodyLength: 2048 }
 ];
 const MOCK_FIELDS = ['Name', 'BodyLength'];
+const MOCK_FIELD_LABELS = {
+    Name: 'Name',
+    BodyLength: 'Body Length'
+};
 
 describe('c-results-display', () => {
     afterEach(() => {
@@ -21,7 +25,7 @@ describe('c-results-display', () => {
         document.body.appendChild(element);
 
         // Call the @api method
-        element.updateResults(MOCK_DATA, MOCK_FIELDS, 'Attachment');
+        element.updateResults(MOCK_DATA, MOCK_FIELDS, 'Attachment', MOCK_FIELD_LABELS);
 
         // Wait for re-render
         await Promise.resolve();
@@ -44,7 +48,7 @@ describe('c-results-display', () => {
         document.body.appendChild(element);
 
         // Call with empty data
-        element.updateResults([], MOCK_FIELDS, 'Attachment');
+        element.updateResults([], MOCK_FIELDS, 'Attachment', MOCK_FIELD_LABELS);
 
         await Promise.resolve();
 

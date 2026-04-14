@@ -1,4 +1,4 @@
-import { createElement } from "@lwc/engine-dom";
+import { createElement } from "lwc";
 import QueryBuilder from "c/queryBuilder";
 import getObjectFieldOptions from "@salesforce/apex/QueryController.getObjectFieldOptions";
 // import executeQuery from '@salesforce/apex/QueryController.executeQuery';
@@ -26,6 +26,7 @@ jest.mock(
 
 const MOCK_FIELDS = ["Id", "Name", "BodyLength"];
 // const MOCK_RESULTS = [{ Id: '001', Name: 'Test File' }];
+const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 describe("c-query-builder", () => {
   afterEach(() => {
@@ -46,12 +47,14 @@ describe("c-query-builder", () => {
     });
     document.body.appendChild(element);
 
-    // Wait for async connectedCallback
-    await Promise.resolve();
-    await Promise.resolve();
+    // Wait for connectedCallback + fetchFields async updates
+    await flushPromises();
+    await flushPromises();
 
     // Verify Apex was called
-    expect(getObjectFieldOptions).toHaveBeenCalled();
+    expect(getObjectFieldOptions).toHaveBeenCalledWith({
+      objectName: "Attachment"
+    });
 
     // Verify fields are populated in dual listbox
     const listbox = element.shadowRoot.querySelector("lightning-dual-listbox");

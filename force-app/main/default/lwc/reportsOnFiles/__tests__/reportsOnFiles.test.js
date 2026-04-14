@@ -1,4 +1,4 @@
-import { createElement } from '@lwc/engine-dom';
+import { createElement } from 'lwc';
 import ReportsOnFiles from 'c/reportsOnFiles';
 
 describe('c-reports-on-files', () => {
