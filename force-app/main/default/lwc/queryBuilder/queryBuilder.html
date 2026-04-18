@@ -6,6 +6,7 @@
         label="Select Object"
         value={selectedObject}
         options={objectOptions}
+        data-control="object-selector"
         onchange={handleObjectChange}
         required
       >
@@ -18,6 +19,7 @@
         selected-label="Selected Fields"
         options={fieldOptions}
         value={selectedFields}
+        data-control="field-selector"
         onchange={handleFieldChange}
         required
         class="slds-var-m-top_small"
@@ -26,6 +28,15 @@
       </lightning-dual-listbox>
 
       <div class="slds-var-m-top_medium">
+        <template if:true={formErrorMessage}>
+          <div
+            class="slds-text-color_error slds-var-m-bottom_small"
+            role="alert"
+          >
+            {formErrorMessage}
+          </div>
+        </template>
+
         <div class="slds-grid">
           <div class="slds-var-m-top_small slds-text-color_weak">
             <p>Filter by field values</p>
@@ -55,6 +66,7 @@
                     options={fieldOptions}
                     data-id={filter.id}
                     data-name="fieldName"
+                    data-control="filter-field"
                     onchange={handleFilterChange}
                     required
                   >
@@ -68,6 +80,7 @@
                     options={operatorOptions}
                     data-id={filter.id}
                     data-name="operator"
+                    data-control="filter-operator"
                     onchange={handleFilterChange}
                     required
                   >
@@ -82,16 +95,21 @@
                       value={filter.value}
                       data-id={filter.id}
                       data-name="value"
+                      data-control="filter-value"
                       onchange={handleFilterChange}
                       placeholder="Enter value"
                       required
                     >
                     </lightning-input>
                   </template>
-                  
+
                   <!-- Multi-Value Input (for IN, NOT IN, INCLUDES, EXCLUDES) -->
                   <template if:true={filter.requiresMultiValue}>
-                    <div class="slds-form-element">
+                    <div
+                      class={filter.multiValueFormElementClass}
+                      data-control="pill-wrapper"
+                      data-id={filter.id}
+                    >
                       <label class="slds-form-element__label">Values</label>
                       <div class="slds-form-element__control">
                         <template if:true={filter.valueItems.length}>
@@ -103,15 +121,29 @@
                           </lightning-pill-container>
                         </template>
                         <lightning-input
+                          label="Add value"
+                          variant="label-hidden"
                           placeholder="Type value and press Enter"
                           value={filter.currentInputValue}
                           data-id={filter.id}
                           data-name="currentInputValue"
+                          data-control="filter-multivalue-input"
+                          aria-invalid={filter.pillContainerHasError}
+                          aria-describedby={filter.pillErrorHelpId}
                           onchange={handleMultiValueInput}
                           onkeyup={handleMultiValueKeyup}
                           class="slds-var-m-top_x-small"
                         >
                         </lightning-input>
+
+                        <template if:true={filter.pillContainerHasError}>
+                          <div
+                            id={filter.pillErrorHelpId}
+                            class="slds-form-element__help"
+                          >
+                            {filter.pillContainerErrorMessage}
+                          </div>
+                        </template>
                       </div>
                     </div>
                   </template>

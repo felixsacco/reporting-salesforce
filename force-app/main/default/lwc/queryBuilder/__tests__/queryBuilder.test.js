@@ -205,4 +205,174 @@ describe("c-query-builder", () => {
     expect(startHandler).not.toHaveBeenCalled();
     expect(executeQuery).not.toHaveBeenCalled();
   });
+
+  it("serializes multi-value operators using utility contract", async () => {
+    getObjectFieldOptions.mockResolvedValue(
+      MOCK_FIELDS.map((fieldName) => ({ label: fieldName, value: fieldName }))
+    );
+    executeQuery.mockResolvedValue(MOCK_RESULTS);
+
+    const element = createElement("c-query-builder", {
+      is: QueryBuilder
+    });
+    document.body.appendChild(element);
+
+    await flushPromises();
+    await flushPromises();
+
+    const listbox = element.shadowRoot.querySelector("lightning-dual-listbox");
+    listbox.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: ["Name"] }
+      })
+    );
+
+    const addConditionButton = Array.from(
+      element.shadowRoot.querySelectorAll("lightning-button")
+    ).find((button) => button.label === "Add Condition");
+    expect(addConditionButton).toBeDefined();
+    addConditionButton.click();
+
+    await flushPromises();
+
+    const fieldCombobox = element.shadowRoot.querySelector(
+      '[data-control="filter-field"]'
+    );
+    fieldCombobox.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: "Name" }
+      })
+    );
+
+    const operatorCombobox = element.shadowRoot.querySelector(
+      '[data-control="filter-operator"]'
+    );
+    operatorCombobox.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: "INCLUDES" }
+      })
+    );
+
+    await flushPromises();
+
+    let multiValueInput = element.shadowRoot.querySelector(
+      '[data-control="filter-multivalue-input"]'
+    );
+    multiValueInput.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: "Alpha" }
+      })
+    );
+    multiValueInput.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
+
+    await flushPromises();
+
+    multiValueInput = element.shadowRoot.querySelector(
+      '[data-control="filter-multivalue-input"]'
+    );
+    multiValueInput.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: "Beta" }
+      })
+    );
+    multiValueInput.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
+
+    await flushPromises();
+
+    const executeButton = Array.from(
+      element.shadowRoot.querySelectorAll("lightning-button")
+    ).find((button) => button.label === "Execute Query");
+    expect(executeButton).toBeDefined();
+    executeButton.click();
+
+    await flushPromises();
+    await flushPromises();
+
+    expect(executeQuery).toHaveBeenCalledTimes(1);
+    const executePayload = executeQuery.mock.calls[0][0];
+    expect(executePayload.filters[0]).toMatchObject({
+      fieldName: "Name",
+      operator: "INCLUDES",
+      value: "Alpha;Beta"
+    });
+  });
+
+  it("renders pill-container wrapper error state for empty multi-value filters", async () => {
+    getObjectFieldOptions.mockResolvedValue(
+      MOCK_FIELDS.map((fieldName) => ({ label: fieldName, value: fieldName }))
+    );
+
+    const element = createElement("c-query-builder", {
+      is: QueryBuilder
+    });
+
+    const startHandler = jest.fn();
+    element.addEventListener("querystart", startHandler);
+
+    document.body.appendChild(element);
+
+    await flushPromises();
+    await flushPromises();
+
+    const listbox = element.shadowRoot.querySelector("lightning-dual-listbox");
+    listbox.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: ["Name"] }
+      })
+    );
+
+    const addConditionButton = Array.from(
+      element.shadowRoot.querySelectorAll("lightning-button")
+    ).find((button) => button.label === "Add Condition");
+    expect(addConditionButton).toBeDefined();
+    addConditionButton.click();
+
+    await flushPromises();
+
+    const fieldCombobox = element.shadowRoot.querySelector(
+      '[data-control="filter-field"]'
+    );
+    fieldCombobox.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: "Name" }
+      })
+    );
+
+    const operatorCombobox = element.shadowRoot.querySelector(
+      '[data-control="filter-operator"]'
+    );
+    operatorCombobox.dispatchEvent(
+      new CustomEvent("change", {
+        detail: { value: "IN" }
+      })
+    );
+
+    await flushPromises();
+
+    const executeButton = Array.from(
+      element.shadowRoot.querySelectorAll("lightning-button")
+    ).find((button) => button.label === "Execute Query");
+    expect(executeButton).toBeDefined();
+    executeButton.click();
+
+    await flushPromises();
+    await flushPromises();
+
+    expect(startHandler).not.toHaveBeenCalled();
+    expect(executeQuery).not.toHaveBeenCalled();
+
+    const pillWrapper = element.shadowRoot.querySelector(
+      '[data-control="pill-wrapper"]'
+    );
+    expect(pillWrapper).not.toBeNull();
+    expect(pillWrapper.className).toContain("slds-has-error");
+
+    const wrapperError = element.shadowRoot.querySelector(
+      ".slds-form-element__help"
+    );
+    expect(wrapperError).not.toBeNull();
+    expect(wrapperError.textContent).toContain(
+      "Add at least one value for the selected operator."
+    );
+  });
 });

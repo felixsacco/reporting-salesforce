@@ -16,7 +16,8 @@ import {
   OBJECT_OPTIONS,
   OPERATOR_OPTIONS,
   createNewFilter,
-  validateRequest
+  serializeMultiValueItems,
+  validateFilterInputs
 } from "./queryUtils";
 
 export default class QueryBuilder extends LightningElement {
@@ -33,6 +34,7 @@ export default class QueryBuilder extends LightningElement {
   limitValue = 50;
   fieldOptions = [];
   isLoading = false;
+  formErrorMessage = "";
 
   // --- Lifecycle ---
   connectedCallback() {
@@ -68,17 +70,22 @@ export default class QueryBuilder extends LightningElement {
   // --- User Actions ---
   handleObjectChange(event) {
     this.selectedObject = event.detail.value;
+    this.formErrorMessage = "";
+    this.applyControlValidity(event.target, "");
     this.fetchFields();
   }
 
   handleFieldChange(event) {
     // event.detail.value contains API names (value property)
     this.selectedFields = event.detail.value;
+    this.formErrorMessage = "";
+    this.applyControlValidity(event.target, "");
   }
 
   handleAddFilter() {
     // Delegate logic to Utility
-    this.filters = [...this.filters, createNewFilter()];
+    this.filters = [...this.filters, this.decorateFilter(createNewFilter())];
+    this.formErrorMessage = "";
   }
 
   handleFilterChange(event) {
@@ -106,15 +113,23 @@ export default class QueryBuilder extends LightningElement {
 
       if (updated.requiresMultiValue) {
         // Initialize multi-value state
+        const valueItems = Array.isArray(updated.valueItems)
+          ? updated.valueItems
+          : [];
+        updated.valueItems = valueItems;
+        updated.currentInputValue = updated.currentInputValue || "";
+        updated.value = serializeMultiValueItems(valueItems, updated.operator);
+      } else {
+        // Single value operator: clear multi-value state
         updated.valueItems = [];
         updated.currentInputValue = "";
         updated.value = "";
-      } else {
-        // Single value operator: clear multi-value state
-        updated.valueItems = undefined;
-        updated.currentInputValue = undefined;
       }
     }
+
+    updated = this.decorateFilter(updated);
+    this.formErrorMessage = "";
+    this.applyControlValidity(event.target, "");
 
     this.filters = [
       ...this.filters.slice(0, idx),
@@ -126,6 +141,7 @@ export default class QueryBuilder extends LightningElement {
   handleRemoveFilter(event) {
     const id = parseInt(event.currentTarget.dataset.id, 10);
     this.filters = this.filters.filter((f) => f.id !== id);
+    this.formErrorMessage = "";
   }
 
   handleLimitChange(event) {
@@ -140,9 +156,21 @@ export default class QueryBuilder extends LightningElement {
 
     const targetId = Number.parseInt(id, 10);
     const idx = this.filters.findIndex((f) => f.id === targetId);
-    if (idx === -1) return;
+    if (idx === -1) {
+      return;
+    }
 
-    const updated = { ...this.filters[idx], [name]: value };
+    const updated = this.decorateFilter({
+      ...this.filters[idx],
+      [name]: value,
+      pillContainerHasError: false,
+      pillContainerErrorMessage: "",
+      valueErrorMessage: ""
+    });
+
+    this.formErrorMessage = "";
+    this.applyControlValidity(event.target, "");
+
     this.filters = [
       ...this.filters.slice(0, idx),
       updated,
@@ -151,42 +179,50 @@ export default class QueryBuilder extends LightningElement {
   }
 
   handleMultiValueKeyup(event) {
-    if (event.key === "Enter") {
-      const { id } = event.currentTarget.dataset;
-      const targetId = Number.parseInt(id, 10);
-      const idx = this.filters.findIndex((f) => f.id === targetId);
-      if (idx === -1) return;
-
-      const filter = this.filters[idx];
-      const inputValue = filter.currentInputValue?.trim();
-
-      if (inputValue) {
-        // Add pill
-        const newPill = {
-          label: inputValue,
-          name: `pill-${Date.now()}`,
-          type: "plain"
-        };
-
-        const valueItems = [...(filter.valueItems || []), newPill];
-
-        // Build comma-separated value string for backend
-        const value = valueItems.map((item) => item.label).join(",");
-
-        const updated = {
-          ...filter,
-          valueItems: valueItems,
-          value: value,
-          currentInputValue: ""
-        };
-
-        this.filters = [
-          ...this.filters.slice(0, idx),
-          updated,
-          ...this.filters.slice(idx + 1)
-        ];
-      }
+    if (event.key !== "Enter") {
+      return;
     }
+
+    event.preventDefault();
+
+    const { id } = event.currentTarget.dataset;
+    const targetId = Number.parseInt(id, 10);
+    const idx = this.filters.findIndex((f) => f.id === targetId);
+    if (idx === -1) {
+      return;
+    }
+
+    const filter = this.filters[idx];
+    const inputValue = filter.currentInputValue?.trim();
+    if (!inputValue) {
+      return;
+    }
+
+    const newPill = {
+      label: inputValue,
+      name: `pill-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      type: "plain"
+    };
+
+    const valueItems = [...(filter.valueItems || []), newPill];
+    const updated = this.decorateFilter({
+      ...filter,
+      valueItems,
+      value: serializeMultiValueItems(valueItems, filter.operator),
+      currentInputValue: "",
+      pillContainerHasError: false,
+      pillContainerErrorMessage: "",
+      valueErrorMessage: ""
+    });
+
+    this.formErrorMessage = "";
+    this.applyControlValidity(event.currentTarget, "");
+
+    this.filters = [
+      ...this.filters.slice(0, idx),
+      updated,
+      ...this.filters.slice(idx + 1)
+    ];
   }
 
   handlePillRemove(event) {
@@ -195,19 +231,24 @@ export default class QueryBuilder extends LightningElement {
 
     const targetId = Number.parseInt(id, 10);
     const idx = this.filters.findIndex((f) => f.id === targetId);
-    if (idx === -1) return;
+    if (idx === -1) {
+      return;
+    }
 
     const filter = this.filters[idx];
     const valueItems = filter.valueItems.filter(
       (item) => item.name !== pillName
     );
-    const value = valueItems.map((item) => item.label).join(",");
-
-    const updated = {
+    const updated = this.decorateFilter({
       ...filter,
-      valueItems: valueItems,
-      value: value
-    };
+      valueItems,
+      value: serializeMultiValueItems(valueItems, filter.operator),
+      pillContainerHasError: false,
+      pillContainerErrorMessage: "",
+      valueErrorMessage: ""
+    });
+
+    this.formErrorMessage = "";
 
     this.filters = [
       ...this.filters.slice(0, idx),
@@ -220,11 +261,17 @@ export default class QueryBuilder extends LightningElement {
 
   async handleRunQuery() {
     // 1. Delegate Validation to Utility
-    const validation = validateRequest(this.selectedFields, this.filters);
+    const validation = validateFilterInputs({
+      selectedObject: this.selectedObject,
+      selectedFields: this.selectedFields,
+      filters: this.filters
+    });
+    this.applyValidationFeedback(validation);
     if (!validation.isValid) {
-      this.showToast("Error", validation.errorMessage, "error");
       return;
     }
+
+    const apexFilters = this.buildApexFilters();
 
     const requestId = this.generateRequestId();
     this.dispatchLifecycleEvent(requestId, "querystart", {
@@ -238,7 +285,7 @@ export default class QueryBuilder extends LightningElement {
       const results = await executeQuery({
         objectName: this.selectedObject,
         fields: this.selectedFields,
-        filters: this.filters,
+        filters: apexFilters,
         limitValue: this.limitValue
       });
 
@@ -279,6 +326,97 @@ export default class QueryBuilder extends LightningElement {
         }
       })
     );
+  }
+
+  buildApexFilters() {
+    return this.filters.map((filter) => ({
+      fieldName: filter.fieldName,
+      operator: filter.operator,
+      value: filter.requiresMultiValue
+        ? serializeMultiValueItems(filter.valueItems || [], filter.operator)
+        : String(filter.value ?? "").trim()
+    }));
+  }
+
+  /**
+   * @description Applies inline validity and filter-level wrapper errors.
+   * @param {Object} validation Validation result from queryUtils.
+   * @returns {void}
+   */
+  applyValidationFeedback(validation) {
+    const fieldErrors = validation?.fieldErrors || {};
+    const filterErrors = fieldErrors.filters || {};
+
+    this.formErrorMessage = validation?.formErrorMessage || "";
+
+    this.applyControlValidity(
+      this.template.querySelector('[data-control="object-selector"]'),
+      fieldErrors.object
+    );
+    this.applyControlValidity(
+      this.template.querySelector('[data-control="field-selector"]'),
+      fieldErrors.fields
+    );
+
+    this.filters = this.filters.map((filter) =>
+      this.decorateFilter(filter, filterErrors[filter.id])
+    );
+
+    Promise.resolve().then(() => {
+      this.filters.forEach((filter) => {
+        const currentFilterErrors = filterErrors[filter.id] || {};
+        this.applyControlValidity(
+          this.template.querySelector(
+            `[data-control="filter-field"][data-id="${filter.id}"]`
+          ),
+          currentFilterErrors.fieldName
+        );
+        this.applyControlValidity(
+          this.template.querySelector(
+            `[data-control="filter-operator"][data-id="${filter.id}"]`
+          ),
+          currentFilterErrors.operator
+        );
+
+        const valueSelector = filter.requiresMultiValue
+          ? `[data-control="filter-multivalue-input"][data-id="${filter.id}"]`
+          : `[data-control="filter-value"][data-id="${filter.id}"]`;
+
+        this.applyControlValidity(
+          this.template.querySelector(valueSelector),
+          currentFilterErrors.value
+        );
+      });
+    });
+  }
+
+  decorateFilter(filter, filterErrors = {}) {
+    const pillContainerHasError = Boolean(filterErrors.pillContainerHasError);
+    return {
+      ...filter,
+      valueItems: Array.isArray(filter.valueItems) ? filter.valueItems : [],
+      currentInputValue: filter.currentInputValue || "",
+      fieldErrorMessage: filterErrors.fieldName || "",
+      operatorErrorMessage: filterErrors.operator || "",
+      valueErrorMessage: filterErrors.value || "",
+      pillContainerHasError,
+      pillContainerErrorMessage: filterErrors.pillContainerErrorMessage || "",
+      pillErrorHelpId: `pill-error-${filter.id}`,
+      multiValueFormElementClass: pillContainerHasError
+        ? "slds-form-element slds-has-error"
+        : "slds-form-element"
+    };
+  }
+
+  applyControlValidity(control, message = "") {
+    if (!control || typeof control.setCustomValidity !== "function") {
+      return;
+    }
+
+    control.setCustomValidity(message || "");
+    if (typeof control.reportValidity === "function") {
+      control.reportValidity();
+    }
   }
 
   buildFieldLabels() {
