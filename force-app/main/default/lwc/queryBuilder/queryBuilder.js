@@ -1,7 +1,7 @@
 /**
  * @description Query builder component for dynamic SOQL queries.
  *              Enhanced with pill container UI for multi-value operators and field labels.
- * 
+ *
  * @author Mritesh
  * @date 2026-02-17
  * @version 1.2.0
@@ -20,6 +20,8 @@ import {
 } from "./queryUtils";
 
 export default class QueryBuilder extends LightningElement {
+  static EVENT_SOURCE = "queryBuilder";
+
   // Constants from Utils
   objectOptions = OBJECT_OPTIONS;
   operatorOptions = OPERATOR_OPTIONS;
@@ -42,8 +44,8 @@ export default class QueryBuilder extends LightningElement {
     this.isLoading = true;
     try {
       // Call the enhanced Apex method that returns {label, value} pairs
-      const fieldOptions = await getObjectFieldOptions({ 
-        objectName: this.selectedObject 
+      const fieldOptions = await getObjectFieldOptions({
+        objectName: this.selectedObject
       });
 
       // Options are already in {label, value} format for display
@@ -96,17 +98,17 @@ export default class QueryBuilder extends LightningElement {
     }
 
     let updated = { ...this.filters[idx], [name]: value };
-    
+
     // If operator changed, update requiresMultiValue flag
-    if (name === 'operator') {
-      const operatorConfig = OPERATOR_OPTIONS.find(op => op.value === value);
+    if (name === "operator") {
+      const operatorConfig = OPERATOR_OPTIONS.find((op) => op.value === value);
       updated.requiresMultiValue = operatorConfig?.requiresMultiValue || false;
-      
+
       if (updated.requiresMultiValue) {
         // Initialize multi-value state
         updated.valueItems = [];
-        updated.currentInputValue = '';
-        updated.value = '';
+        updated.currentInputValue = "";
+        updated.value = "";
       } else {
         // Single value operator: clear multi-value state
         updated.valueItems = undefined;
@@ -135,11 +137,11 @@ export default class QueryBuilder extends LightningElement {
   handleMultiValueInput(event) {
     const { id, name } = event.currentTarget.dataset;
     const value = event.detail.value;
-    
+
     const targetId = Number.parseInt(id, 10);
     const idx = this.filters.findIndex((f) => f.id === targetId);
     if (idx === -1) return;
-    
+
     const updated = { ...this.filters[idx], [name]: value };
     this.filters = [
       ...this.filters.slice(0, idx),
@@ -149,35 +151,35 @@ export default class QueryBuilder extends LightningElement {
   }
 
   handleMultiValueKeyup(event) {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       const { id } = event.currentTarget.dataset;
       const targetId = Number.parseInt(id, 10);
       const idx = this.filters.findIndex((f) => f.id === targetId);
       if (idx === -1) return;
-      
+
       const filter = this.filters[idx];
       const inputValue = filter.currentInputValue?.trim();
-      
+
       if (inputValue) {
         // Add pill
         const newPill = {
           label: inputValue,
           name: `pill-${Date.now()}`,
-          type: 'plain'
+          type: "plain"
         };
-        
+
         const valueItems = [...(filter.valueItems || []), newPill];
-        
+
         // Build comma-separated value string for backend
-        const value = valueItems.map(item => item.label).join(',');
-        
+        const value = valueItems.map((item) => item.label).join(",");
+
         const updated = {
           ...filter,
           valueItems: valueItems,
           value: value,
-          currentInputValue: ''
+          currentInputValue: ""
         };
-        
+
         this.filters = [
           ...this.filters.slice(0, idx),
           updated,
@@ -190,21 +192,23 @@ export default class QueryBuilder extends LightningElement {
   handlePillRemove(event) {
     const { id } = event.currentTarget.dataset;
     const pillName = event.detail.item.name;
-    
+
     const targetId = Number.parseInt(id, 10);
     const idx = this.filters.findIndex((f) => f.id === targetId);
     if (idx === -1) return;
-    
+
     const filter = this.filters[idx];
-    const valueItems = filter.valueItems.filter(item => item.name !== pillName);
-    const value = valueItems.map(item => item.label).join(',');
-    
+    const valueItems = filter.valueItems.filter(
+      (item) => item.name !== pillName
+    );
+    const value = valueItems.map((item) => item.label).join(",");
+
     const updated = {
       ...filter,
       valueItems: valueItems,
       value: value
     };
-    
+
     this.filters = [
       ...this.filters.slice(0, idx),
       updated,
@@ -222,6 +226,12 @@ export default class QueryBuilder extends LightningElement {
       return;
     }
 
+    const requestId = this.generateRequestId();
+    this.dispatchLifecycleEvent(requestId, "querystart", {
+      objectType: this.selectedObject,
+      fields: this.selectedFields
+    });
+
     this.isLoading = true;
     try {
       // 2. Call API
@@ -232,31 +242,62 @@ export default class QueryBuilder extends LightningElement {
         limitValue: this.limitValue
       });
 
-      // 3. Build fieldLabels map from fieldOptions
-      const fieldLabels = {};
-      this.selectedFields.forEach(apiName => {
-        const option = this.fieldOptions.find(opt => opt.value === apiName);
-        fieldLabels[apiName] = option ? option.label : apiName;
+      // 3. Dispatch success payload through lifecycle event contract
+      this.dispatchLifecycleEvent(requestId, "querysuccess", {
+        objectType: this.selectedObject,
+        fields: this.selectedFields,
+        fieldLabels: this.buildFieldLabels(),
+        records: Array.isArray(results) ? results : [],
+        recordCount: Array.isArray(results) ? results.length : 0,
+        fieldTypeMap: undefined
       });
-
-      // 4. Dispatch Success with field labels
-      this.dispatchEvent(
-        new CustomEvent('queryresults', {
-          detail: {
-            results: results,
-            fields: this.selectedFields,
-            objectType: this.selectedObject,
-            fieldLabels: fieldLabels
-          }
-        })
-      );
 
       this.showToast("Success", `Found ${results.length} records`, "success");
     } catch (error) {
-      this.showToast("Error", error.body?.message || error.message, "error");
+      this.dispatchLifecycleEvent(requestId, "queryerror", {
+        errorCode: "QUERY_EXECUTION_ERROR",
+        errorMessage: this.getErrorMessage(error),
+        userSafeMessage:
+          "Unable to run query right now. Please review inputs and try again."
+      });
+
+      this.showToast("Error", this.getErrorMessage(error), "error");
     } finally {
       this.isLoading = false;
     }
+  }
+
+  dispatchLifecycleEvent(requestId, eventType, eventPayload = {}) {
+    this.dispatchEvent(
+      new CustomEvent(eventType, {
+        detail: {
+          requestId,
+          timestamp: new Date().toISOString(),
+          source: QueryBuilder.EVENT_SOURCE,
+          eventType,
+          ...eventPayload
+        }
+      })
+    );
+  }
+
+  buildFieldLabels() {
+    const labels = {};
+    this.selectedFields.forEach((apiName) => {
+      const option = this.fieldOptions.find(
+        (fieldOption) => fieldOption.value === apiName
+      );
+      labels[apiName] = option ? option.label : apiName;
+    });
+    return labels;
+  }
+
+  generateRequestId() {
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
+  getErrorMessage(error) {
+    return error?.body?.message || error?.message || "Unexpected query error.";
   }
 
   showToast(title, message, variant) {
