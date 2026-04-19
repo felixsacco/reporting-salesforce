@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
         <itemInstances>
@@ -10,7 +10,7 @@
         <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Reports On Files</masterLabel>
+    <masterLabel>Search Files &amp; Attachments</masterLabel>
     <template>
         <name>flexipage:defaultAppHomeTemplate</name>
     </template>
