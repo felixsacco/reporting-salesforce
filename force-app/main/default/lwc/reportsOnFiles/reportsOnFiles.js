@@ -2,7 +2,7 @@
  * @description Container component for the Reporting on Files application.
  *              Owns lifecycle state and declaratively passes it to resultsDisplay.
  *
- * @author Mritesh
+ * @author Agent Mritesh
  * @date 2026-04-18
  * @version 2.0.0
  */

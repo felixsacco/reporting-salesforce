@@ -2,7 +2,7 @@
  * @description Results display component for query results.
  *              Consumes parent-managed reactive state and renders paged rows.
  *
- * @author Mritesh
+ * @author Agent Mritesh
  * @date 2026-04-18
  * @version 2.0.0
  */

@@ -2,7 +2,7 @@
  * @description Utility module for queryBuilder component.
  *              Contains constants, factory functions, and validation logic.
  *
- * @author Mritesh
+ * @author Agent Mritesh
  * @date 2026-04-18
  * @version 2.0.0
  */
