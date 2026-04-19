@@ -42,7 +42,7 @@ Once you have an Org and the credentials, please go through the installation ste
 <h4>Option 1: Install via Package Link (Recommended for Admins)</h4>
 
 You can install this application directly into your Sandbox or Production environment using the Unlocked Package link.<br>
-<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tWU000000QLgjYAG">Install Package</a>
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tWU000000QopBYAS">Install Package</a>
 
 1. Click the link above.
 2. Log in to your Salesforce Org.
@@ -74,10 +74,11 @@ If you have the Salesforce CLI installed, you can deploy the source code directl
 After installing the application, you must assign the Permission Set to any user who needs access to the tool. Without this, the component will fail to execute queries.
 
 1. Go to Setup > Users > Permission Sets.
-2. Click on "Reporting On Files". (Navigate to 'R' section)
-3. Use "Reporting On Files Access" for non-admin users.
-4. Click Manage Assignments > Add Assignment.
-5. Select the users and click Assign.
+2. Click on "Reports on Attachments". (Navigate to 'R' section)
+3. Click Manage Assignments > Add Assignment.
+4. Select the users and click Assign.
+
+Note: The Permission Set grants access to the necessary Apex classes and Lightning components required for the application to function properly. System Administrators typically have these permissions by default, but other user profiles will require this explicit assignment to use the tool.
 
 A demo of how to assign a permission set to a user can be found in the following video.<br>
 <a href="https://youtu.be/Z6XlW5OlVmc">How to Add a Permission Set to a Salesforce User</a>
@@ -89,8 +90,8 @@ A demo of how to assign a permission set to a user can be found in the following
 ## Usage
 
 1. Navigate to the App Launcher.
-2. Search for "Reports on Files."
-3. Select the Object (Attachment or Content Document).
+2. In the search bar type "Search Files & Attachments" and open the tab.
+3. Once in the app, select the Object (Attachment or Content Document).
 4. Select the Fields you wish to see.
 5. (Optional) Add Filters or Change Limit.
 6. Click Execute Query.
@@ -120,7 +121,7 @@ Reporting-on-Attachments-Salesforce/
 ├── force-app/
 │   └── main/
 │       └── default/
-│           ├── classes/                         
+│           ├── classes/
 │           │   ├── AttachmentQueryController.cls
 │           │   ├── QueryController.cls
 │           │   ├── QueryFilterDto.cls
@@ -128,10 +129,10 @@ Reporting-on-Attachments-Salesforce/
 │           │   ├── SecurityService.cls
 │           │   ├── SoqlQueryBuilder.cls
 │           │   ├── Utils.cls
-│           │   └── Tests/                       
+│           │   └── Tests/
 │           ├── flexipages/
 │           │   └── Reports_On_Files.flexipage-meta.xml
-│           ├── lwc/                            
+│           ├── lwc/
 │           │   ├── queryBuilder/
 │           │   │   ├── __tests__/
 │           │   │   ├── queryBuilder.html
