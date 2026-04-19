@@ -1,8 +1,8 @@
 {
   "packageDirectories": [
     {
-      "versionName": "V1.2",
-      "versionNumber": "1.2.1.NEXT",
+      "versionName": "Reports on Files 1.3.0",
+      "versionNumber": "1.3.0.NEXT",
       "path": "force-app",
       "default": true,
       "package": "Report_On_Files",
@@ -16,6 +16,7 @@
   "packageAliases": {
     "Report_On_Files": "0HoWU0000000sTR0AY",
     "Report_On_Files@0.1.0-1": "04tWU000000F72nYAC",
-    "Report_On_Files@1.1.0-1": "04tWU000000F74PYAS"
+    "Report_On_Files@1.1.0-1": "04tWU000000F74PYAS",
+    "Report_On_Files@1.3.0-1": "04tWU000000QopBYAS"
   }
 }
