@@ -1,5 +1,5 @@
 DEPRECATED: LWC components were half baked and violated almost all the LWC directives.
-Newer version at <a href="https://github.com/MriteshAdak/Search-Files-and-Attachments" />
+Newer version at <a href="https://github.com/MriteshAdak/Search-Files-and-Attachments">Search-Files-and-Attachments<a>
 
 <h1>Report app for Attachments and Files in Salesforce</h1>
 
